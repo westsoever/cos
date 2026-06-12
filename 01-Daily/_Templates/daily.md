@@ -1,49 +1,12 @@
 ---
-date: YYYY-MM-DD
-type: daily
-weekday:
-location: Copenhagen
-# --- planned (morning) ---
-wake_time:
-energy_am:          # 1-5
-deep_work_planned:  # hours
-# --- tracked (evening) ---
-sleep_hours:
-weather:
-temp_c:
-focus_level:        # 1-5
-energy_pm:          # 1-5
-deep_work_actual:   # hours
-productivity:       # 1-10
-mood:
-relaxation:         # what actually helped me unwind
-tags: [daily]
+deprecated: true
 ---
 
-## For future Claude
-Daily note: one file per day. The morning routine fills the YAML `planned` fields and the `## Plan` section. The evening routine fills the `tracked` fields, the `## Time Log` summary, and the `## Reflection` section. The weekly routine reads across all of these to find focus/energy/relaxation patterns. 30-min check-ins are appended to `01-Daily/logs/YYYY-MM-DD.md`.
+# DEPRECATED - split into two templates
 
-## Plan
-**Top priorities**
-1.
-2.
-3.
+The single daily note was splitting badly (morning + evening routines wrote the same filename and overrode each other). The daily note is now two files per day:
 
-**Deep work blocks**
--
+- Morning plan -> `01-Daily/morning-set/YYYY-MM-DD.md` (template: `_Templates/morning.md`)
+- Evening reflection -> `01-Daily/evening-reflection/YYYY-MM-DD.md` (template: `_Templates/evening.md`)
 
-**What makes today a win**
--
-
-## Time Log
-<!-- Summary of the day's 30-min check-ins (source: 01-Daily/logs/YYYY-MM-DD.md) -->
-
-## Reflection
-**What went well**
--
-
-**What drained me / distractions**
--
-
-**Focus + energy notes**
--
+The weekly synthesis joins the two by date. See `01-Daily/README.md`.

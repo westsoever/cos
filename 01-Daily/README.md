@@ -2,29 +2,32 @@
 
 This folder runs the **Plan + Track + Review** loop. Goal: capture what I do every day so I can learn what helps me relax, when I'm most productive, and where my real focus hours are.
 
+## Why two folders
+
+The morning and evening routines used to write the same `YYYY-MM-DD.md` file and overrode each other. They are now split into separate folders, one file per routine per day, joined by date.
+
 ## Files
 
 | Path | What it is |
 |------|-----------|
-| `_Templates/daily.md` | Canonical daily note template. All routines copy this schema. |
-| `YYYY-MM-DD.md` | One note per day. Created by the morning routine, completed by the evening routine. |
+| `_Templates/morning.md` | Template for the morning plan. |
+| `_Templates/evening.md` | Template for the evening reflection + tracked metrics. |
+| `morning-set/YYYY-MM-DD.md` | Morning plan for the day (created by the Morning Planner routine). |
+| `evening-reflection/YYYY-MM-DD.md` | Evening reflection + metrics for the day (created by the Evening Reflection routine). |
 | `logs/YYYY-MM-DD.md` | Raw 30-min check-ins appended by my external timer ("what am I up to right now"). |
-| `weekly-YYYY-MM-DD.md` | Weekly synthesis: patterns across the past 7 daily notes. |
+| `weekly-YYYY-MM-DD.md` | Weekly synthesis: patterns across the past 7 days (reads both folders). |
 
-## Data model (one file per day)
+## Data model (two files per day, joined by date)
 
-Everything for a day lives in `YYYY-MM-DD.md`. The YAML frontmatter is the queryable layer (Dataview-friendly):
+**Morning (`morning-set/`)** - YAML: `wake_time`, `energy_am` (1-5), `deep_work_planned` (hours). Body: `## Plan`.
 
-- **Planned (morning):** `wake_time`, `energy_am` (1-5), `deep_work_planned` (hours)
-- **Tracked (evening):** `sleep_hours`, `weather`, `temp_c`, `focus_level` (1-5), `energy_pm` (1-5), `deep_work_actual` (hours), `productivity` (1-10), `mood`, `relaxation`
-
-Body sections: `## Plan`, `## Time Log`, `## Reflection`.
+**Evening (`evening-reflection/`)** - YAML: `sleep_hours`, `weather`, `temp_c`, `focus_level` (1-5), `energy_pm` (1-5), `deep_work_actual` (hours), `productivity` (1-10), `mood`, `relaxation`. Body: `## Time Log`, `## Reflection`.
 
 ## The three routines (set up in Littlebird > Routines)
 
-1. **Morning Planner** (daily ~07:30) - asks wake time, energy, top 3 priorities, deep-work blocks, the one thing that makes today a win. Creates `YYYY-MM-DD.md`.
-2. **Evening Reflection** (daily ~21:30) - asks sleep, focus, energy, actual deep work, productivity, mood, what went well, what drained me, what helped me relax. Fetches Copenhagen weather. Summarizes the day's `logs/` check-ins. Updates `YYYY-MM-DD.md`.
-3. **Weekly Synthesis** (weekly, Sun evening) - reads the past 7 daily notes, finds patterns (focus vs sleep/weather/energy, time-of-day focus, planned vs actual deep work, what relaxation correlates with better focus). Writes `weekly-YYYY-MM-DD.md`.
+1. **Morning Planner** (daily ~07:30) - asks wake time, energy, top 3 priorities, deep-work blocks, the one thing that makes today a win. Creates `morning-set/YYYY-MM-DD.md`.
+2. **Evening Reflection** (daily ~21:30) - asks sleep, focus, energy, actual deep work, productivity, mood, what went well, what drained me, what helped me relax. Fetches Copenhagen weather. Summarizes the day's `logs/` check-ins. Creates `evening-reflection/YYYY-MM-DD.md`.
+3. **Weekly Synthesis** (weekly, Sun evening) - reads the past 7 days from BOTH folders, joins by date, finds patterns (focus vs sleep/weather/energy, time-of-day focus, planned vs actual deep work, what relaxation correlates with better focus). Writes `weekly-YYYY-MM-DD.md`.
 
 ## The 30-min timer
 
