@@ -23,3 +23,10 @@
 
 ## Recent Captures
 *Process weekly from [[00-Inbox]]*
+
+## Daily Tracking
+- Day logs: `06-Wiki/day_logs/YYYY-MM-DD.md`
+- Week logs: `06-Wiki/week_logs/weekly-YYYY-MM-DD.md`
+- Morning plans: `01-Daily/morning-set/YYYY-MM-DD.md`
+- Templates: `05-Knowledge/Templates/`
+- System docs: `06-Wiki/README.md`
