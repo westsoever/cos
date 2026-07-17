@@ -29,6 +29,26 @@ npm run build
 
 Deploy the `web/dist` folder to Vercel, Netlify, or any static host.
 
+**GitHub Pages** (permanent, at `https://westsoever.github.io/cos/`):
+
+```bash
+cd web
+VITE_BASE=/cos/ npm run build
+npx gh-pages -d dist -b gh-pages
+```
+
+Then enable GitHub Pages in repo Settings → Pages → source: `gh-pages` branch.
+
+**Temporary cloud preview** (HTTPS, works on iPhone):
+
+```bash
+npm run build
+npx serve dist -l 3000
+cloudflared tunnel --url http://localhost:3000
+```
+
+Use the `*.trycloudflare.com` URL on your phone.
+
 ## MVP loop
 
 1. **Scan** — Search catalog or snap a label photo, then confirm the coffee
