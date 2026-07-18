@@ -30,7 +30,7 @@ export function CoffeeDetail({
   if (!coffee) {
     return (
       <div className="text-center">
-        <p className="text-[#8a7568]">Coffee not found.</p>
+        <p className="text-[#766257]">Coffee not found.</p>
         <button type="button" onClick={onBack} className="mt-4 text-[#6b3a2a] underline">
           Go back
         </button>
@@ -72,7 +72,7 @@ export function CoffeeDetail({
       )}
 
       <header>
-        <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#a66b4f]">{coffee.roaster}</p>
+        <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#8b5339]">{coffee.roaster}</p>
         <h2 className="mt-1 text-3xl font-semibold tracking-tight text-[#1c1410]">{coffee.name}</h2>
         <div className="mt-3 flex flex-wrap gap-2 text-sm text-[#6f5c51]">
           <span className="rounded-full bg-[#f1e8df] px-3 py-1">{coffee.origin}</span>
@@ -115,7 +115,7 @@ export function CoffeeDetail({
         <h3 id="rate-heading" className="mb-1 text-xl font-semibold text-[#1c1410]">
           {existingRating ? 'Update your rating' : 'Rate this coffee'}
         </h3>
-        <p className="mb-5 text-sm text-[#8a7568]">A quick impression is enough. Add brew details only if useful.</p>
+        <p className="mb-5 text-sm text-[#766257]">A quick impression is enough. Add brew details only if useful.</p>
         <RateForm
           coffee={coffee}
           existingRating={existingRating}

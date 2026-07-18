@@ -118,11 +118,11 @@ function JournalEntryCard({
                 “{rating.note}”
               </p>
             ) : (
-              <p className="mt-4 text-sm italic text-[#9a8477]">No tasting note for this cup.</p>
+              <p className="mt-4 text-sm italic text-[#78675d]">No tasting note for this cup.</p>
             )}
 
             <div className="mt-5 border-t border-[#eee4da] pt-4">
-              <p className="text-[0.65rem] font-bold uppercase tracking-[0.16em] text-[#9a7967]">
+              <p className="text-[0.65rem] font-bold uppercase tracking-[0.16em] text-[#76513f]">
                 Brew snapshot
               </p>
               <p className="mt-1.5 text-sm font-medium capitalize text-[#49362c]">
@@ -262,7 +262,7 @@ export function RepertoireView({ onSelectCoffee, refreshKey, onDiscover }: Reper
         <div className="grid gap-3 sm:grid-cols-[1fr_auto_auto]">
           <label className="relative block">
             <span className="sr-only">Search journal</span>
-            <span className="pointer-events-none absolute inset-y-0 left-4 flex items-center text-[#9b7f70]">
+            <span className="pointer-events-none absolute inset-y-0 left-4 flex items-center text-[#78675d]">
               <SearchIcon />
             </span>
             <input
@@ -270,7 +270,7 @@ export function RepertoireView({ onSelectCoffee, refreshKey, onDiscover }: Reper
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Search coffees, origins, notes…"
-              className="h-12 w-full rounded-2xl border border-[#e3d7cc] bg-[#fffdf9] pl-11 pr-4 text-sm text-[#33231c] shadow-sm outline-none placeholder:text-[#a99487] focus:border-[#9d6a4e] focus:ring-2 focus:ring-[#9d6a4e]/15"
+              className="h-12 w-full rounded-2xl border border-[#e3d7cc] bg-[#fffdf9] pl-11 pr-4 text-sm text-[#33231c] shadow-sm outline-none placeholder:text-[#766257] focus:border-[#9d6a4e] focus:ring-2 focus:ring-[#9d6a4e]/15"
             />
           </label>
           <label>
@@ -298,7 +298,7 @@ export function RepertoireView({ onSelectCoffee, refreshKey, onDiscover }: Reper
             </select>
           </label>
         </div>
-        <p className="px-1 text-xs text-[#917a6c]" aria-live="polite">
+        <p className="px-1 text-xs text-[#78675d]" aria-live="polite">
           Showing {visibleEntries.length} of {entries.length} {entries.length === 1 ? 'entry' : 'entries'}
         </p>
       </section>

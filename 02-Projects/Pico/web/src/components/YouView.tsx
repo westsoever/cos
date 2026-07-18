@@ -60,7 +60,7 @@ function PreferenceGroup({
           ))}
         </ol>
       ) : (
-        <p className="mt-4 text-sm text-[#9b877b]">Still learning</p>
+        <p className="mt-4 text-sm text-[#78675d]">Still learning</p>
       )}
     </div>
   );

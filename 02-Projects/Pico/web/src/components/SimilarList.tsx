@@ -13,7 +13,7 @@ interface SimilarListProps {
 export function SimilarList({ items, onSelect, title = 'Similar coffees' }: SimilarListProps) {
   if (items.length === 0) {
     return (
-      <p className="rounded-xl bg-[#f8f3ee] p-4 text-sm text-[#8a7568]">No similar coffees found yet.</p>
+      <p className="rounded-xl bg-[#f8f3ee] p-4 text-sm text-[#766257]">No similar coffees found yet.</p>
     );
   }
 
@@ -21,7 +21,7 @@ export function SimilarList({ items, onSelect, title = 'Similar coffees' }: Simi
     <section className="space-y-3" aria-labelledby="similar-coffees-heading">
       <div>
         <h3 id="similar-coffees-heading" className="text-lg font-semibold text-[#1c1410]">{title}</h3>
-        <p className="mt-1 text-sm text-[#8a7568]">Based on origin, roast, process, and flavor.</p>
+        <p className="mt-1 text-sm text-[#766257]">Based on origin, roast, process, and flavor.</p>
       </div>
       <ul className="space-y-2">
         {items.map(({ coffee, score }) => (
@@ -38,7 +38,7 @@ export function SimilarList({ items, onSelect, title = 'Similar coffees' }: Simi
                 <div className="flex items-start justify-between gap-2">
                   <div>
                     <p className="font-medium text-[#1c1410]">{coffee.name}</p>
-                    <p className="text-sm text-[#8a7568]">{coffee.roaster}</p>
+                    <p className="text-sm text-[#766257]">{coffee.roaster}</p>
                   </div>
                   <span className="shrink-0 rounded-full bg-[#f2ebe4] px-2 py-0.5 text-xs font-semibold text-[#6b3a2a]">
                     {formatMatchPercent(score)}% similar
@@ -80,7 +80,7 @@ export function CoffeeCard({
       </div>
       <div className="min-w-0 flex-1">
         <p className="font-medium text-[#1c1410]">{name}</p>
-        <p className="text-sm text-[#8a7568]">
+        <p className="text-sm text-[#766257]">
           {roaster} · {origin}
         </p>
         {stars !== undefined && (
@@ -89,7 +89,7 @@ export function CoffeeCard({
           </div>
         )}
       </div>
-      <span aria-hidden="true" className="text-[#a66b4f] transition group-hover:translate-x-0.5">→</span>
+      <span aria-hidden="true" className="text-[#8b5339] transition group-hover:translate-x-0.5">→</span>
     </button>
   );
 }

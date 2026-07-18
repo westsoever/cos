@@ -39,7 +39,7 @@ export function ScanView({ onSelectCoffee }: ScanViewProps) {
     <div className="mx-auto max-w-lg space-y-8">
       <header className="space-y-4">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#a66b4f]">Discover</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8b5339]">Discover</p>
           <h2 className="mt-1 text-3xl font-semibold tracking-tight text-[#1c1410]">Find a coffee worth remembering.</h2>
           <p className="mt-2 text-sm leading-6 text-[#78675d]">
             Search our curated catalog, or add a bag from its label.
@@ -75,7 +75,7 @@ export function ScanView({ onSelectCoffee }: ScanViewProps) {
             <button
               type="button"
               onClick={() => setShowManualForm(true)}
-              className="w-full rounded-xl border border-[#cdbbae] bg-white py-3 font-medium text-[#6b3a2a] transition hover:border-[#a66b4f] focus:outline-none focus:ring-2 focus:ring-[#6b3a2a]/30"
+            className="w-full rounded-xl border border-[#cdbbae] bg-white py-3 font-medium text-[#6b3a2a] transition hover:border-[#8b5339] focus:outline-none focus:ring-2 focus:ring-[#6b3a2a]/30"
             >
               Enter label details
             </button>
@@ -95,7 +95,7 @@ export function ScanView({ onSelectCoffee }: ScanViewProps) {
       {recentRatings.length > 0 && (
         <section aria-labelledby="recent-heading" className="space-y-3">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#a66b4f]">Pick up where you left off</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8b5339]">Pick up where you left off</p>
             <h3 id="recent-heading" className="mt-1 text-xl font-semibold text-[#1c1410]">Recently tasted</h3>
           </div>
           <ul className="space-y-2">
@@ -117,10 +117,10 @@ export function ScanView({ onSelectCoffee }: ScanViewProps) {
       <section aria-labelledby="browse-heading" className="space-y-4">
         <div>
           <h3 id="browse-heading" className="text-xl font-semibold text-[#1c1410]">Browse coffees</h3>
-          <p className="mt-1 text-sm text-[#8a7568]">A curated starting point for your next cup.</p>
+          <p className="mt-1 text-sm text-[#766257]">A curated starting point for your next cup.</p>
         </div>
         <div className="relative">
-          <span aria-hidden="true" className="pointer-events-none absolute left-4 top-3.5 text-[#8a7568]">
+          <span aria-hidden="true" className="pointer-events-none absolute left-4 top-3.5 text-[#766257]">
             <SearchIcon className="h-5 w-5" />
           </span>
           <label htmlFor="coffee-search" className="sr-only">Search coffee catalog</label>
@@ -130,7 +130,7 @@ export function ScanView({ onSelectCoffee }: ScanViewProps) {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search coffee, roaster, origin…"
-            className="w-full rounded-2xl border border-[#ded2c7] bg-white py-3 pl-10 pr-4 text-[#1c1410] shadow-sm placeholder:text-[#a79588] focus:border-[#6b3a2a] focus:outline-none focus:ring-2 focus:ring-[#6b3a2a]/20"
+            className="w-full rounded-2xl border border-[#ded2c7] bg-white py-3 pl-10 pr-4 text-[#1c1410] shadow-sm placeholder:text-[#766257] focus:border-[#6b3a2a] focus:outline-none focus:ring-2 focus:ring-[#6b3a2a]/20"
             autoComplete="off"
           />
         </div>
@@ -144,7 +144,7 @@ export function ScanView({ onSelectCoffee }: ScanViewProps) {
               className={`shrink-0 rounded-full border px-3.5 py-1.5 text-sm font-medium capitalize transition focus:outline-none focus:ring-2 focus:ring-[#6b3a2a]/30 ${
                 roastFilter === roast
                   ? 'border-[#6b3a2a] bg-[#6b3a2a] text-white'
-                  : 'border-[#ded2c7] bg-white text-[#6b3a2a] hover:border-[#a66b4f]'
+                  : 'border-[#ded2c7] bg-white text-[#6b3a2a] hover:border-[#8b5339]'
               }`}
             >
               {roast === 'all' ? 'All roasts' : roast}
@@ -184,7 +184,7 @@ export function ScanView({ onSelectCoffee }: ScanViewProps) {
         ) : (
           <div className="rounded-2xl border border-dashed border-[#d8c9bd] px-5 py-8 text-center">
             <p className="font-medium text-[#1c1410]">No coffees found</p>
-            <p className="mt-1 text-sm text-[#8a7568]">Try another search or add this coffee yourself.</p>
+            <p className="mt-1 text-sm text-[#766257]">Try another search or add this coffee yourself.</p>
             <button
               type="button"
               onClick={() => setShowAddCoffee(true)}

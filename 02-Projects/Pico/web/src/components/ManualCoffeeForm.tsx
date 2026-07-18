@@ -8,7 +8,7 @@ interface ManualCoffeeFormProps {
 }
 
 const inputClassName =
-  'w-full rounded-xl border border-[#e8dfd6] bg-white px-4 py-3 text-[#1c1410] placeholder:text-[#b5a394] focus:border-[#6b3a2a] focus:outline-none focus:ring-2 focus:ring-[#6b3a2a]/20';
+  'w-full rounded-xl border border-[#e8dfd6] bg-white px-4 py-3 text-[#1c1410] placeholder:text-[#766257] focus:border-[#6b3a2a] focus:outline-none focus:ring-2 focus:ring-[#6b3a2a]/20';
 
 export function ManualCoffeeForm({ onSubmit, onCancel }: ManualCoffeeFormProps) {
   const [name, setName] = useState('');
@@ -187,7 +187,7 @@ export function ManualCoffeeForm({ onSubmit, onCancel }: ManualCoffeeFormProps) 
             aria-invalid={scaScoreInvalid}
             aria-describedby="sca-score-help"
           />
-          <p id="sca-score-help" className={`mt-1 text-xs ${scaScoreInvalid ? 'text-[#9b2c2c]' : 'text-[#8a7568]'}`}>
+          <p id="sca-score-help" className={`mt-1 text-xs ${scaScoreInvalid ? 'text-[#9b2c2c]' : 'text-[#766257]'}`}>
             {scaScoreInvalid ? 'Enter a score from 0 to 100.' : 'Specialty Coffee Association (0–100)'}
           </p>
         </div>

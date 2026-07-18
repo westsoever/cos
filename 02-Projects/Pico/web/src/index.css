@@ -97,13 +97,13 @@ body {
 #root {
   min-height: 100vh;
   min-height: 100dvh;
+  height: 100dvh;
 }
 
 button,
 input,
 textarea,
 select {
-  color: inherit;
   font: inherit;
 }
 
@@ -139,6 +139,7 @@ img {
 .app-shell {
   display: grid;
   grid-template-rows: auto minmax(0, 1fr) auto;
+  height: 100dvh;
   min-height: 100vh;
   min-height: 100dvh;
   overflow: hidden;

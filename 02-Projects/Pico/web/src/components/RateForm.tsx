@@ -103,7 +103,7 @@ export function RateForm({ coffee, existingRating, photoDataUrl, onSave, onCance
       <div>
         <p className="mb-2 block text-sm font-semibold text-[#6b3a2a]">Your rating <span className="text-[#a33b2b]">*</span></p>
         <StarRating value={stars} onChange={setStars} />
-        {stars === 0 && <p className="mt-1 text-xs text-[#8a7568]">Choose a star rating to save.</p>}
+        {stars === 0 && <p className="mt-1 text-xs text-[#766257]">Choose a star rating to save.</p>}
       </div>
 
       <div>
@@ -113,7 +113,7 @@ export function RateForm({ coffee, existingRating, photoDataUrl, onSave, onCance
 
       <div>
         <label htmlFor="note" className="mb-2 block text-sm font-medium text-[#6b3a2a]">
-          Tasting note <span className="font-normal text-[#8a7568]">(optional)</span>
+          Tasting note <span className="font-normal text-[#766257]">(optional)</span>
         </label>
         <textarea
           id="note"
@@ -121,7 +121,7 @@ export function RateForm({ coffee, existingRating, photoDataUrl, onSave, onCance
           onChange={(e) => setNote(e.target.value)}
           rows={3}
           placeholder="What would you want to remember?"
-          className="w-full rounded-xl border border-[#e8dfd6] bg-white px-4 py-3 text-[#1c1410] placeholder:text-[#b5a394] focus:border-[#6b3a2a] focus:outline-none focus:ring-2 focus:ring-[#6b3a2a]/20"
+          className="w-full rounded-xl border border-[#e8dfd6] bg-white px-4 py-3 text-[#1c1410] placeholder:text-[#766257] focus:border-[#6b3a2a] focus:outline-none focus:ring-2 focus:ring-[#6b3a2a]/20"
         />
       </div>
 
@@ -134,11 +134,11 @@ export function RateForm({ coffee, existingRating, photoDataUrl, onSave, onCance
           className="flex w-full items-center justify-between rounded-lg text-left font-semibold text-[#6b3a2a] focus:outline-none focus:ring-2 focus:ring-[#6b3a2a]/30"
         >
           <span>
-            Brew details <span className="ml-1 text-sm font-normal text-[#8a7568]">(optional)</span>
+            Brew details <span className="ml-1 text-sm font-normal text-[#766257]">(optional)</span>
           </span>
           <span aria-hidden="true">{showBrewDetails ? '−' : '+'}</span>
         </button>
-        <p className="mt-1 text-xs text-[#8a7568]">Keep the recipe if this cup is worth repeating.</p>
+        <p className="mt-1 text-xs text-[#766257]">Keep the recipe if this cup is worth repeating.</p>
 
         {showBrewDetails && (
           <div id="brew-details" className="mt-4 space-y-4 rounded-xl bg-[#faf6f1] p-4">
@@ -191,7 +191,7 @@ export function RateForm({ coffee, existingRating, photoDataUrl, onSave, onCance
           disabled={stars === 0 || brewDetailsInvalid}
           className="flex-[1.4] rounded-xl bg-[#6b3a2a] py-3 font-semibold text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#6b3a2a] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40"
         >
-          {existingRating ? 'Update rating' : 'Save to repertoire'}
+          {existingRating ? 'Update rating' : 'Save to journal'}
         </button>
       </div>
     </form>
@@ -228,7 +228,7 @@ function BrewNumberField({
           onChange={(e) => onChange(e.target.value)}
           className="w-full rounded-xl border border-[#ded2c7] bg-white py-2.5 pl-3 pr-10 text-[#1c1410] focus:border-[#6b3a2a] focus:outline-none focus:ring-2 focus:ring-[#6b3a2a]/20"
         />
-        <span className="pointer-events-none absolute right-3 top-2.5 text-sm text-[#8a7568]">{unit}</span>
+        <span className="pointer-events-none absolute right-3 top-2.5 text-sm text-[#766257]">{unit}</span>
       </div>
     </div>
   );

@@ -53,7 +53,7 @@ export function CameraCapture({ photoDataUrl, onCapture }: CameraCaptureProps) {
           <span aria-hidden="true" className="text-xl">▣</span>
           <span className="text-left">
             <span className="block font-semibold">{status === 'loading' ? 'Preparing photo…' : 'Add label photo'}</span>
-            <span className="block text-xs font-normal text-[#8a7568]">Take a photo or choose one</span>
+            <span className="block text-xs font-normal text-[#766257]">Take a photo or choose one</span>
           </span>
         </button>
       )}
