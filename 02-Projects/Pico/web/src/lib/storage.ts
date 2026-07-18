@@ -151,7 +151,10 @@ export function saveUserData(data: UserData): void {
 
 export function saveRating(rating: Rating): UserData {
   const data = loadUserData();
-  const ratings = sanitizeRatings([...data.ratings, rating]);
+  const ratings = sanitizeRatings([
+    ...data.ratings.filter((existing) => existing.coffeeId !== rating.coffeeId),
+    rating,
+  ]);
   const sanitizedData = {
     ratings,
     tasteProfile: computeTasteProfile(ratings),

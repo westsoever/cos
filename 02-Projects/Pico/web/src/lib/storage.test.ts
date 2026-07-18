@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Rating, TasteProfile } from '../types/coffee';
-import { loadUserData, saveUserData } from './storage';
+import { loadUserData, saveRating, saveUserData } from './storage';
 
 const STORAGE_KEY = 'pico-user-data';
 
@@ -210,6 +210,19 @@ describe('Pico user-data storage compatibility', () => {
     const loaded = loadUserData();
     expect(loaded.ratings).toEqual([withBrew, withoutBrew]);
     expect(loaded.ratings[1]).not.toHaveProperty('brew');
+  });
+
+  it('replaces an existing rating even when its stored timestamp is in the future', () => {
+    saveUserData({
+      ratings: [rating({ ratedAt: '2099-01-01T00:00:00.000Z', note: 'Old note' })],
+      tasteProfile: null,
+    });
+
+    saveRating(rating({ ratedAt: '2026-07-18T13:00:00.000Z', note: 'Updated note' }));
+
+    expect(loadUserData().ratings).toEqual([
+      rating({ ratedAt: '2026-07-18T13:00:00.000Z', note: 'Updated note' }),
+    ]);
   });
 
   it('recomputes the taste profile instead of trusting persisted profile data', () => {

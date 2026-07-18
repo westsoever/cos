@@ -50,21 +50,23 @@ function App() {
   const [pendingPhoto, setPendingPhoto] = useState<string | undefined>();
   const [refreshKey, setRefreshKey] = useState(0);
   const [notice, setNotice] = useState<Notice | null>(null);
-  const [addRequestKey, setAddRequestKey] = useState<number>();
+  const [addRequestKey, setAddRequestKey] = useState<number | undefined>(undefined);
   const acceptedHash = useRef(window.location.hash || tabHash(route.tab));
   const acceptedHistoryState = useRef(window.history.state);
   const dirtyRef = useRef(false);
-  const pendingCustomId = useRef<string>();
+  const pendingCustomId = useRef<string | undefined>(undefined);
   const { tab: activeTab, coffeeId: selectedCoffeeId } = route;
 
   const reportDirty = useCallback((isDirty: boolean) => {
     dirtyRef.current = isDirty;
   }, []);
 
-  const confirmDiscard = () =>
-    !dirtyRef.current || window.confirm('Discard your unsaved rating?');
+  const confirmDiscard = useCallback(
+    () => !dirtyRef.current || window.confirm('Discard your unsaved rating?'),
+    [],
+  );
 
-  const discardPendingCustom = () => {
+  const discardPendingCustom = useCallback(() => {
     if (!pendingCustomId.current) return;
     try {
       removeCustomCoffee(pendingCustomId.current);
@@ -72,14 +74,14 @@ function App() {
       // Cleanup is best-effort; navigation should never fail because storage is unavailable.
     }
     pendingCustomId.current = undefined;
-  };
+  }, []);
 
-  const acceptRoute = (nextRoute: AppRoute) => {
+  const acceptRoute = useCallback((nextRoute: AppRoute) => {
     acceptedHash.current = window.location.hash || tabHash(nextRoute.tab);
     acceptedHistoryState.current = window.history.state;
     reportDirty(false);
     setRoute(nextRoute);
-  };
+  }, [reportDirty]);
 
   useEffect(() => {
     if (!window.location.hash) {
@@ -108,7 +110,7 @@ function App() {
       window.removeEventListener('popstate', syncRoute);
       window.removeEventListener('hashchange', syncRoute);
     };
-  }, []);
+  }, [acceptRoute, confirmDiscard, discardPendingCustom]);
 
   useEffect(() => {
     if (!notice) return;
@@ -227,7 +229,6 @@ function App() {
       onSelectCoffee={handleSelectCoffee}
       refreshKey={refreshKey}
       onDiscover={() => navigateToTab('scan')}
-      onAddCoffee={handleAddCoffee}
     />
   ) : (
     <YouView
@@ -235,6 +236,7 @@ function App() {
       onSelectCoffee={handleSelectCoffee}
       refreshKey={refreshKey}
       onDiscover={() => navigateToTab('scan')}
+      onAddCoffee={handleAddCoffee}
     />
   );
 

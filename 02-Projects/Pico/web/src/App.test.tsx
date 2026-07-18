@@ -92,6 +92,26 @@ describe('Pico app interactions', () => {
     expect(window.location.hash).toBe('#/journal');
   });
 
+  it('removes an unfinished custom coffee when rating is cancelled', async () => {
+    const user = userEvent.setup();
+    window.location.hash = '#/discover';
+    render(<App />);
+
+    await user.click(screen.getByRole('button', { name: '+ Add coffee' }));
+    await user.click(screen.getByRole('button', { name: 'Enter label details' }));
+    await user.type(screen.getByRole('textbox', { name: 'Coffee name' }), 'Test Lot');
+    await user.type(screen.getByRole('textbox', { name: 'Roaster' }), 'Test Roaster');
+    await user.click(screen.getByRole('button', { name: 'Continue to rating' }));
+
+    expect(await screen.findByRole('heading', { level: 2, name: 'Test Lot' })).toBeInTheDocument();
+    expect(JSON.parse(localStorage.getItem('pico-custom-coffees') ?? '[]')).toHaveLength(1);
+
+    await user.click(screen.getByRole('button', { name: 'Cancel' }));
+
+    expect(await screen.findByRole('heading', { level: 1, name: 'Discover' })).toBeInTheDocument();
+    expect(JSON.parse(localStorage.getItem('pico-custom-coffees') ?? '[]')).toEqual([]);
+  });
+
   it('falls back safely when a coffee hash contains malformed URI encoding', () => {
     window.location.hash = '#/coffee/%E0%A4%A?from=journal';
 
@@ -119,9 +139,29 @@ describe('Pico app interactions', () => {
     await user.type(form.getByRole('textbox', { name: /Tasting note/i }), 'Keep this draft.');
     await user.click(form.getByRole('button', { name: 'Save to journal' }));
 
-    expect(await screen.findByRole('alert')).toHaveTextContent('Could not save your rating');
+    expect(await screen.findByRole('alert')).toHaveTextContent('Storage is full');
     expect(window.location.hash).toBe('#/coffee/eth-yirg-001?from=discover');
     expect(form.getByRole('textbox', { name: /Tasting note/i })).toHaveValue('Keep this draft.');
+  });
+
+  it('does not carry a draft into a different coffee', async () => {
+    const user = userEvent.setup();
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+    window.location.hash = '#/coffee/eth-yirg-001?from=discover';
+    render(<App />);
+
+    await user.click(screen.getByRole('radio', { name: '5 out of 5 stars' }));
+    await user.type(screen.getByRole('textbox', { name: /Tasting note/i }), 'Only for coffee A');
+
+    const similarSection = screen.getByRole('heading', { name: 'Similar coffees' }).closest('section');
+    expect(similarSection).not.toBeNull();
+    await user.click(within(similarSection as HTMLElement).getAllByRole('button')[0]);
+
+    expect(screen.getByRole('textbox', { name: /Tasting note/i })).toHaveValue('');
+    expect(screen.getByRole('radio', { name: '1 out of 5 stars' })).toHaveAttribute(
+      'aria-checked',
+      'false',
+    );
   });
 
   it('guards internal and native hash navigation while a rating draft is dirty', async () => {
