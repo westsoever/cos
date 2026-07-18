@@ -33,6 +33,12 @@ function positiveNumber(value: unknown): number | undefined {
     : undefined;
 }
 
+function temperature(value: unknown): number | undefined {
+  return typeof value === 'number' && Number.isFinite(value) && value >= 0
+    ? Math.min(value, 100)
+    : undefined;
+}
+
 function sanitizeBrewJournal(value: unknown): BrewJournal | undefined {
   if (!isRecord(value)) return undefined;
 
@@ -47,7 +53,7 @@ function sanitizeBrewJournal(value: unknown): BrewJournal | undefined {
   brew.doseGrams = positiveNumber(value.doseGrams);
   brew.waterGrams = positiveNumber(value.waterGrams);
   brew.yieldGrams = positiveNumber(value.yieldGrams);
-  brew.temperatureCelsius = positiveNumber(value.temperatureCelsius);
+  brew.temperatureCelsius = temperature(value.temperatureCelsius);
   brew.brewTimeSeconds = positiveNumber(value.brewTimeSeconds);
 
   for (const key of Object.keys(brew) as (keyof BrewJournal)[]) {
@@ -62,10 +68,15 @@ function sanitizeRating(value: unknown): Rating | null {
     return null;
   }
 
-  const stars =
-    typeof value.stars === 'number' && Number.isFinite(value.stars)
-      ? Math.min(5, Math.max(0, value.stars))
-      : 0;
+  if (
+    typeof value.stars !== 'number' ||
+    !Number.isFinite(value.stars) ||
+    value.stars < 1 ||
+    value.stars > 5
+  ) {
+    return null;
+  }
+  const stars = value.stars;
   const tags = Array.isArray(value.flavorTags)
     ? value.flavorTags.filter(
         (tag): tag is FlavorTag => typeof tag === 'string' && flavorTags.has(tag),
@@ -93,9 +104,21 @@ function sanitizeRating(value: unknown): Rating | null {
 
 function sanitizeRatings(value: unknown): Rating[] {
   if (!Array.isArray(value)) return [];
-  return value
-    .map(sanitizeRating)
-    .filter((rating): rating is Rating => rating !== null);
+
+  const ratingsByCoffeeId = new Map<string, Rating>();
+  for (const candidate of value) {
+    const rating = sanitizeRating(candidate);
+    if (!rating) continue;
+
+    const existing = ratingsByCoffeeId.get(rating.coffeeId);
+    if (
+      !existing ||
+      Date.parse(rating.ratedAt) >= Date.parse(existing.ratedAt)
+    ) {
+      ratingsByCoffeeId.set(rating.coffeeId, rating);
+    }
+  }
+  return [...ratingsByCoffeeId.values()];
 }
 
 export function loadUserData(): UserData {
@@ -128,15 +151,13 @@ export function saveUserData(data: UserData): void {
 
 export function saveRating(rating: Rating): UserData {
   const data = loadUserData();
-  const existingIndex = data.ratings.findIndex((r) => r.coffeeId === rating.coffeeId);
-  if (existingIndex >= 0) {
-    data.ratings[existingIndex] = rating;
-  } else {
-    data.ratings.push(rating);
-  }
-  data.tasteProfile = computeTasteProfile(data.ratings);
-  saveUserData(data);
-  return data;
+  const ratings = sanitizeRatings([...data.ratings, rating]);
+  const sanitizedData = {
+    ratings,
+    tasteProfile: computeTasteProfile(ratings),
+  };
+  saveUserData(sanitizedData);
+  return sanitizedData;
 }
 
 export function getRatingForCoffee(coffeeId: string): Rating | undefined {

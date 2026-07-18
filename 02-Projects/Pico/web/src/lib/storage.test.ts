@@ -48,8 +48,20 @@ describe('Pico user-data storage compatibility', () => {
           null,
           { stars: 5 },
           {
-            coffeeId: 'coffee-with-bad-data',
+            coffeeId: 'zero-stars',
+            stars: 0,
+            flavorTags: [],
+            ratedAt: '2026-07-18T12:00:00.000Z',
+          },
+          {
+            coffeeId: 'too-many-stars',
             stars: 12,
+            flavorTags: [],
+            ratedAt: '2026-07-18T12:00:00.000Z',
+          },
+          {
+            coffeeId: 'coffee-with-bad-data',
+            stars: 5,
             flavorTags: ['fruity', 'not-a-tag', 'fruity', 42],
             note: 123,
             ratedAt: 'not-a-date',
@@ -59,7 +71,7 @@ describe('Pico user-data storage compatibility', () => {
               doseGrams: 0,
               waterGrams: 300,
               yieldGrams: -1,
-              temperatureCelsius: Number.POSITIVE_INFINITY,
+              temperatureCelsius: 0,
               brewTimeSeconds: 180,
             },
           },
@@ -77,10 +89,105 @@ describe('Pico user-data storage compatibility', () => {
         brew: {
           grind: 'medium',
           waterGrams: 300,
+          temperatureCelsius: 0,
           brewTimeSeconds: 180,
         },
       },
     ]);
+  });
+
+  it('rejects missing and out-of-range stars instead of clamping them', () => {
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        ratings: [
+          rating({ coffeeId: 'below', stars: -1 }),
+          rating({ coffeeId: 'zero', stars: 0 }),
+          rating({ coffeeId: 'above', stars: 5.1 }),
+          rating({ coffeeId: 'missing', stars: null as unknown as number }),
+          rating({ coffeeId: 'one', stars: 1 }),
+          rating({ coffeeId: 'five', stars: 5 }),
+        ],
+      }),
+    );
+
+    expect(loadUserData().ratings.map(({ coffeeId, stars }) => ({ coffeeId, stars }))).toEqual([
+      { coffeeId: 'one', stars: 1 },
+      { coffeeId: 'five', stars: 5 },
+    ]);
+  });
+
+  it('rejects non-finite stars when sanitizing data before saving', () => {
+    saveUserData({
+      ratings: [
+        rating({ coffeeId: 'nan', stars: Number.NaN }),
+        rating({ coffeeId: 'infinity', stars: Number.POSITIVE_INFINITY }),
+        rating({ coffeeId: 'valid', stars: 4 }),
+      ],
+      tasteProfile: null,
+    });
+
+    expect(loadUserData().ratings).toEqual([
+      rating({ coffeeId: 'valid', stars: 4 }),
+    ]);
+  });
+
+  it('keeps the newest duplicate rating and the last one when dates tie', () => {
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        ratings: [
+          rating({ stars: 2, note: 'older', ratedAt: '2026-07-17T12:00:00.000Z' }),
+          rating({ stars: 5, note: 'newest', ratedAt: '2026-07-19T12:00:00.000Z' }),
+          rating({ stars: 3, note: 'middle', ratedAt: '2026-07-18T12:00:00.000Z' }),
+          rating({
+            coffeeId: 'same-date',
+            stars: 4,
+            note: 'first',
+            ratedAt: '2026-07-18T12:00:00.000Z',
+          }),
+          rating({
+            coffeeId: 'same-date',
+            stars: 5,
+            note: 'last',
+            ratedAt: '2026-07-18T12:00:00.000Z',
+          }),
+        ],
+      }),
+    );
+
+    expect(loadUserData().ratings).toEqual([
+      rating({ stars: 5, note: 'newest', ratedAt: '2026-07-19T12:00:00.000Z' }),
+      rating({
+        coffeeId: 'same-date',
+        stars: 5,
+        note: 'last',
+        ratedAt: '2026-07-18T12:00:00.000Z',
+      }),
+    ]);
+  });
+
+  it('caps temperature at 100 while requiring other numeric brew amounts to be positive', () => {
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        ratings: [
+          rating({
+            brew: {
+              doseGrams: 0,
+              waterGrams: -1,
+              yieldGrams: 0,
+              temperatureCelsius: 140,
+              brewTimeSeconds: 0,
+            },
+          }),
+        ],
+      }),
+    );
+
+    expect(loadUserData().ratings[0].brew).toEqual({
+      temperatureCelsius: 100,
+    });
   });
 
   it('round-trips ratings both with and without optional brew details', () => {
