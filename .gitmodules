@@ -1,3 +1,3 @@
 [submodule "02-Projects/pico"]
 	path = 02-Projects/pico
-	url = https://github.com/westsoever/pico.git
+	url = ../pico.git
