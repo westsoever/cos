@@ -3,12 +3,12 @@ name: Pico CI
 on:
   pull_request:
     paths:
-      - '02-Projects/pico/**'
+      - '02-Projects/pico/web/**'
       - '.github/workflows/pico-ci.yml'
   push:
     branches: [main]
     paths:
-      - '02-Projects/pico/**'
+      - '02-Projects/pico/web/**'
       - '.github/workflows/pico-ci.yml'
   workflow_dispatch:
 
@@ -37,6 +37,12 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Test
+        run: npm test
+
+      - name: Lint
+        run: npm run lint
 
       - name: Build (root base path)
         run: npm run build
