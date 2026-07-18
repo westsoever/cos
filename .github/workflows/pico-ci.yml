@@ -3,12 +3,14 @@ name: Pico CI
 on:
   pull_request:
     paths:
-      - '02-Projects/Pico/web/**'
+      - '02-Projects/pico/**'
+      - '.gitmodules'
       - '.github/workflows/pico-ci.yml'
   push:
     branches: [main]
     paths:
-      - '02-Projects/Pico/web/**'
+      - '02-Projects/pico/**'
+      - '.gitmodules'
       - '.github/workflows/pico-ci.yml'
   workflow_dispatch:
 
@@ -25,15 +27,17 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: 02-Projects/Pico/web
+        working-directory: 02-Projects/pico/web
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: 02-Projects/Pico/web/package-lock.json
+          cache-dependency-path: 02-Projects/pico/web/package-lock.json
 
       - name: Install dependencies
         run: npm ci
@@ -55,15 +59,17 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: 02-Projects/Pico/web/package-lock.json
+          cache-dependency-path: 02-Projects/pico/web/package-lock.json
 
       - name: Build for GitHub Pages
-        working-directory: 02-Projects/Pico/web
+        working-directory: 02-Projects/pico/web
         env:
           VITE_BASE: /cos/
         run: |
@@ -74,6 +80,6 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: 02-Projects/Pico/web/dist
+          publish_dir: 02-Projects/pico/web/dist
           publish_branch: gh-pages
           force_orphan: true
