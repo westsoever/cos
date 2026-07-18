@@ -1,0 +1,85 @@
+name: Pico CI
+
+on:
+  pull_request:
+    paths:
+      - '02-Projects/Pico/web/**'
+      - '.github/workflows/pico-ci.yml'
+  push:
+    branches: [main]
+    paths:
+      - '02-Projects/Pico/web/**'
+      - '.github/workflows/pico-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pico-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build Pico web app
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: 02-Projects/Pico/web
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: 02-Projects/Pico/web/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build (root base path)
+        run: npm run build
+
+      - name: Build (GitHub Pages base path)
+        env:
+          VITE_BASE: /cos/
+        run: npm run build
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: 02-Projects/Pico/web/package-lock.json
+
+      - name: Build for GitHub Pages
+        working-directory: 02-Projects/Pico/web
+        env:
+          VITE_BASE: /cos/
+        run: |
+          npm ci
+          npm run build
+
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: 02-Projects/Pico/web/dist
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
