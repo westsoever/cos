@@ -58,6 +58,68 @@ Use the `*.trycloudflare.com` URL on your phone.
 
 The default flow stays intentionally quick. Enthusiasts can expand **Brew details** while rating to record method, dose, water or yield, temperature, grind, and brew time.
 
+## Functionality
+
+### Discover
+
+- Browse the built-in specialty coffee catalog or filter it by roast level.
+- Search by coffee, roaster, origin, process, variety, score, description, or flavor.
+- Reopen recently tasted coffees.
+- Add a custom coffee by copying details from its bag.
+- Capture or choose a label photo. Pico resizes the image before storing it; it does not currently identify coffee from the photo.
+
+### Rate and record
+
+- Rate coffee from 1–5 stars with mouse, touch, or keyboard controls.
+- Select flavor tags and save an optional tasting note.
+- Attach a resized bag photo to the saved rating.
+- Optionally record a repeatable brew recipe:
+  - method
+  - coffee dose
+  - water or beverage yield
+  - water temperature
+  - grind size
+  - brew time
+- Update an existing saved rating without creating duplicates.
+- Protect unsaved drafts when navigating away and report recoverable storage errors.
+
+### Journal
+
+- Review saved coffees with ratings, notes, photos, flavors, dates, and brew summaries.
+- Search across coffee metadata, notes, and displayed flavor tags.
+- Filter by favorites, attached photos, or roast level.
+- Sort by newest, highest rated, or coffee name.
+- View journal totals, average rating, and photo count.
+
+### Taste
+
+- Build a taste profile from coffees rated 4 stars or higher.
+- Show relative flavor strengths and preferred origins, processes, and roast levels.
+- Track profile maturity as more coffees are rated.
+- Recommend unrated coffees using flavor, origin, process, and roast similarity.
+- Explain why each recommendation matches the saved taste profile.
+
+### App behavior
+
+- Responsive mobile bottom navigation and desktop sidebar navigation.
+- URL-backed Discover, Journal, Taste, and coffee-detail views with browser Back/Forward support.
+- Accessible focus handling, semantic controls, reduced-motion support, and keyboard-operable ratings.
+- Installable web-app metadata and iOS home-screen icon.
+- Local-first persistence with validation and recovery from malformed saved records.
+- No account, backend, analytics, or cloud sync: catalog additions and ratings remain in that browser's local storage.
+
+## Quality checks
+
+```bash
+cd web
+npm test
+npm run lint
+npm run build
+VITE_BASE=/cos/ npm run build
+```
+
+The automated suite covers primary journeys, navigation guards, catalog and storage validation, taste calculations, brew boundaries, journal controls, keyboard ratings, and photo processing.
+
 ## Project structure
 
 ```
