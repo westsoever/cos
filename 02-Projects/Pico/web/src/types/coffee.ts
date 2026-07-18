@@ -19,10 +19,39 @@ export interface Coffee {
   origin: string;
   process: string;
   roastLevel: RoastLevel;
+  variety?: string;
+  scaScore?: number;
   flavorTags: FlavorTag[];
   description: string;
   barcode?: string;
+  isCustom?: boolean;
 }
+
+export interface ManualCoffeeInput {
+  name: string;
+  roaster: string;
+  origin?: string;
+  process: string;
+  roastLevel: RoastLevel;
+  variety?: string;
+  scaScore?: number;
+}
+
+export const ROAST_LEVEL_LABELS: Record<RoastLevel, string> = {
+  light: 'Light',
+  medium: 'Medium',
+  dark: 'Dark',
+};
+
+export const COFFEE_PROCESSES = [
+  'washed',
+  'natural',
+  'honey',
+  'wet-hulled',
+  'pulped natural',
+  'anaerobic',
+  'other',
+] as const;
 
 export interface Rating {
   coffeeId: string;

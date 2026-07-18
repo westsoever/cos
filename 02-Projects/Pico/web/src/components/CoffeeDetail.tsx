@@ -61,6 +61,12 @@ export function CoffeeDetail({
           <span className="rounded-full bg-[#ede5dc] px-2.5 py-0.5">{coffee.origin}</span>
           <span className="rounded-full bg-[#ede5dc] px-2.5 py-0.5">{coffee.process}</span>
           <span className="rounded-full bg-[#ede5dc] px-2.5 py-0.5">{coffee.roastLevel} roast</span>
+          {coffee.variety && (
+            <span className="rounded-full bg-[#ede5dc] px-2.5 py-0.5">{coffee.variety}</span>
+          )}
+          {coffee.scaScore !== undefined && (
+            <span className="rounded-full bg-[#ede5dc] px-2.5 py-0.5">SCA {coffee.scaScore}</span>
+          )}
         </div>
         <p className="mt-3 text-sm text-[#6b3a2a]">{coffee.description}</p>
         <div className="mt-3">
