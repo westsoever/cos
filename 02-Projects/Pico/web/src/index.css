@@ -138,6 +138,10 @@ img {
 
 .app-shell {
   display: grid;
+  grid-template-areas:
+    "header"
+    "main"
+    "nav";
   grid-template-rows: auto minmax(0, 1fr) auto;
   height: 100dvh;
   min-height: 100vh;
@@ -146,6 +150,7 @@ img {
 }
 
 .app-header {
+  grid-area: header;
   z-index: 10;
   display: flex;
   align-items: center;
@@ -230,6 +235,7 @@ img {
 }
 
 .app-main {
+  grid-area: main;
   min-width: 0;
   overflow-x: hidden;
   overflow-y: auto;
@@ -244,6 +250,7 @@ img {
 }
 
 .app-nav {
+  grid-area: nav;
   z-index: 20;
   padding:
     var(--space-2)
@@ -322,6 +329,9 @@ img {
 
 @media (min-width: 48rem) {
   .app-shell {
+    grid-template-areas:
+      "header main"
+      "nav main";
     grid-template-columns: 15.5rem minmax(0, 1fr);
     grid-template-rows: auto minmax(0, 1fr);
   }
@@ -369,8 +379,7 @@ img {
   }
 
   .app-main {
-    grid-column: 2;
-    grid-row: 1 / span 2;
+    grid-area: main;
   }
 
   .app-main__inner {
@@ -454,6 +463,11 @@ img {
   font-weight: 650;
   text-align: center;
   animation: toast-in 180ms ease-out;
+}
+
+.app-toast[data-tone="error"] {
+  border-color: color-mix(in srgb, var(--color-danger) 55%, transparent);
+  background: color-mix(in srgb, var(--color-danger) 94%, var(--color-ink));
 }
 
 @keyframes toast-in {

@@ -118,7 +118,7 @@ function JournalEntryCard({
                 “{rating.note}”
               </p>
             ) : (
-              <p className="mt-4 text-sm italic text-[#78675d]">No tasting note for this cup.</p>
+              <p className="mt-4 text-sm italic text-[#78675d]">No tasting note saved.</p>
             )}
 
             <div className="mt-5 border-t border-[#eee4da] pt-4">
@@ -177,6 +177,7 @@ export function RepertoireView({ onSelectCoffee, refreshKey, onDiscover }: Reper
       if (!matchesFilter) return false;
       if (!normalizedQuery) return true;
 
+      const summaryTags = rating.flavorTags.length > 0 ? rating.flavorTags : coffee.flavorTags;
       return [
         coffee.name,
         coffee.roaster,
@@ -184,7 +185,7 @@ export function RepertoireView({ onSelectCoffee, refreshKey, onDiscover }: Reper
         coffee.process,
         coffee.roastLevel,
         rating.note,
-        ...rating.flavorTags.map((tag) => FLAVOR_TAG_LABELS[tag]),
+        ...summaryTags.map((tag) => FLAVOR_TAG_LABELS[tag]),
       ]
         .join(' ')
         .toLowerCase()
@@ -206,7 +207,7 @@ export function RepertoireView({ onSelectCoffee, refreshKey, onDiscover }: Reper
         </div>
         <p className="mt-6 text-[0.68rem] font-bold uppercase tracking-[0.2em] text-[#a26543]">Your journal</p>
         <h2 className="mt-2 font-serif text-3xl font-semibold tracking-tight text-[#2b1d17]">
-          Remember every good cup
+          Remember coffees you love
         </h2>
         <p className="mt-3 max-w-sm text-sm leading-6 text-[#816c60]">
           Photograph, rate, and note your first coffee. Your tastiest discoveries will live here.

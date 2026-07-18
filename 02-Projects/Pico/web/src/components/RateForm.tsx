@@ -16,11 +16,23 @@ interface RateFormProps {
   coffee: Coffee;
   existingRating?: Rating;
   photoDataUrl?: string;
-  onSave: (rating: Omit<Rating, 'ratedAt'>) => void;
+  onSave: (rating: Omit<Rating, 'ratedAt'>) => boolean;
   onCancel: () => void;
+  onDirtyChange?: (isDirty: boolean) => void;
 }
 
-export function RateForm({ coffee, existingRating, photoDataUrl, onSave, onCancel }: RateFormProps) {
+export function RateForm(props: RateFormProps) {
+  return <RateFormFields key={props.coffee.id} {...props} />;
+}
+
+function RateFormFields({
+  coffee,
+  existingRating,
+  photoDataUrl,
+  onSave,
+  onCancel,
+  onDirtyChange,
+}: RateFormProps) {
   const savedBrew = existingRating?.brew;
   const [stars, setStars] = useState(existingRating?.stars ?? 0);
   const [flavorTags, setFlavorTags] = useState<FlavorTag[]>(
@@ -52,6 +64,8 @@ export function RateForm({ coffee, existingRating, photoDataUrl, onSave, onCance
   });
   const initialSignature = useRef(draftSignature);
   const isDirty = draftSignature !== initialSignature.current;
+  const onDirtyChangeRef = useRef(onDirtyChange);
+  onDirtyChangeRef.current = onDirtyChange;
 
   useEffect(() => {
     const warnBeforeUnload = (event: BeforeUnloadEvent) => {
@@ -61,6 +75,17 @@ export function RateForm({ coffee, existingRating, photoDataUrl, onSave, onCance
     window.addEventListener('beforeunload', warnBeforeUnload);
     return () => window.removeEventListener('beforeunload', warnBeforeUnload);
   }, [isDirty]);
+
+  useEffect(() => {
+    onDirtyChange?.(isDirty);
+  }, [isDirty, onDirtyChange]);
+
+  useEffect(
+    () => () => {
+      onDirtyChangeRef.current?.(false);
+    },
+    [],
+  );
 
   const numberOrUndefined = (value: string) => value.trim() ? Number(value) : undefined;
   const numericFields = [
@@ -95,7 +120,10 @@ export function RateForm({ coffee, existingRating, photoDataUrl, onSave, onCance
       photoDataUrl: photoDataUrl ?? existingRating?.photoDataUrl,
       ...(hasBrewDetails ? { brew } : {}),
     };
-    onSave(rating);
+    if (onSave(rating)) {
+      initialSignature.current = draftSignature;
+      onDirtyChangeRef.current?.(false);
+    }
   };
 
   return (
@@ -130,7 +158,11 @@ export function RateForm({ coffee, existingRating, photoDataUrl, onSave, onCance
           type="button"
           aria-expanded={showBrewDetails}
           aria-controls="brew-details"
-          onClick={() => setShowBrewDetails((shown) => !shown)}
+          aria-disabled={showBrewDetails && brewDetailsInvalid}
+          onClick={() => {
+            if (showBrewDetails && brewDetailsInvalid) return;
+            setShowBrewDetails((shown) => !shown);
+          }}
           className="flex w-full items-center justify-between rounded-lg text-left font-semibold text-[#6b3a2a] focus:outline-none focus:ring-2 focus:ring-[#6b3a2a]/30"
         >
           <span>
@@ -138,7 +170,11 @@ export function RateForm({ coffee, existingRating, photoDataUrl, onSave, onCance
           </span>
           <span aria-hidden="true">{showBrewDetails ? '−' : '+'}</span>
         </button>
-        <p className="mt-1 text-xs text-[#766257]">Keep the recipe if this cup is worth repeating.</p>
+        <p className="mt-1 text-xs text-[#766257]">
+          {showBrewDetails && brewDetailsInvalid
+            ? 'Fix the recipe values before closing brew details.'
+            : 'Keep a recipe worth repeating.'}
+        </p>
 
         {showBrewDetails && (
           <div id="brew-details" className="mt-4 space-y-4 rounded-xl bg-[#faf6f1] p-4">

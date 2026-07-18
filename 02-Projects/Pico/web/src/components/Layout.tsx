@@ -76,10 +76,6 @@ export function Layout({
         </div>
       </header>
 
-      <main className="app-main" id="main-content">
-        <div className="app-main__inner">{children}</div>
-      </main>
-
       <nav className="app-nav" aria-label="Primary navigation">
         <div className="app-nav__items">
           {tabs.map(({ id, label, icon: Icon }) => {
@@ -103,6 +99,10 @@ export function Layout({
           })}
         </div>
       </nav>
+
+      <main className="app-main" id="main-content" tabIndex={-1}>
+        <div className="app-main__inner">{children}</div>
+      </main>
     </div>
   );
 }

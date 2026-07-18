@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { addCustomCoffee, getCatalogCoffees, getCoffeeById, searchCoffees } from '../lib/catalog';
 import { loadUserData } from '../lib/storage';
 import type { ManualCoffeeInput, RoastLevel } from '../types/coffee';
@@ -8,15 +8,31 @@ import { CoffeeCard } from './SimilarList';
 import { SearchIcon } from './ui/Icons';
 
 interface ScanViewProps {
-  onSelectCoffee: (coffeeId: string, photoDataUrl?: string) => void;
+  onSelectCoffee: (coffeeId: string, photoDataUrl?: string, isNewCustom?: boolean) => void;
+  addRequestKey?: string | number;
 }
 
-export function ScanView({ onSelectCoffee }: ScanViewProps) {
+export function ScanView({ onSelectCoffee, addRequestKey }: ScanViewProps) {
   const [query, setQuery] = useState('');
   const [photoDataUrl, setPhotoDataUrl] = useState<string | undefined>();
   const [showManualForm, setShowManualForm] = useState(false);
   const [showAddCoffee, setShowAddCoffee] = useState(false);
+  const [shouldFocusAddPanel, setShouldFocusAddPanel] = useState(false);
+  const [addError, setAddError] = useState('');
   const [roastFilter, setRoastFilter] = useState<RoastLevel | 'all'>('all');
+  const addPanelRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (addRequestKey === undefined) return;
+    setShowAddCoffee(true);
+    setShouldFocusAddPanel(true);
+  }, [addRequestKey]);
+
+  useEffect(() => {
+    if (!showAddCoffee || !shouldFocusAddPanel) return;
+    addPanelRef.current?.focus();
+    setShouldFocusAddPanel(false);
+  }, [shouldFocusAddPanel, showAddCoffee]);
   const recentRatings = loadUserData().ratings
     .slice()
     .sort((a, b) => Date.parse(b.ratedAt) - Date.parse(a.ratedAt))
@@ -31,8 +47,13 @@ export function ScanView({ onSelectCoffee }: ScanViewProps) {
     .slice(0, query.trim() ? 20 : 8);
 
   const handleManualSubmit = (input: ManualCoffeeInput) => {
-    const coffee = addCustomCoffee(input);
-    onSelectCoffee(coffee.id, photoDataUrl);
+    try {
+      const coffee = addCustomCoffee(input);
+      setAddError('');
+      onSelectCoffee(coffee.id, photoDataUrl, true);
+    } catch {
+      setAddError('Could not add this coffee. Check your browser storage and try again.');
+    }
   };
 
   return (
@@ -57,7 +78,12 @@ export function ScanView({ onSelectCoffee }: ScanViewProps) {
       </header>
 
       {showAddCoffee && (
-        <section id="add-coffee-panel" className="space-y-4 rounded-2xl border border-[#e5d9ce] bg-[#fbf7f2] p-4">
+        <section
+          id="add-coffee-panel"
+          ref={addPanelRef}
+          tabIndex={-1}
+          className="space-y-4 rounded-2xl border border-[#e5d9ce] bg-[#fbf7f2] p-4 focus:outline-none focus:ring-2 focus:ring-[#6b3a2a]/30"
+        >
           <div>
             <h3 className="font-semibold text-[#1c1410]">Add from the bag</h3>
             <p className="mt-1 text-sm leading-5 text-[#78675d]">
@@ -85,6 +111,11 @@ export function ScanView({ onSelectCoffee }: ScanViewProps) {
 
       {showAddCoffee && showManualForm && (
         <section>
+          {addError && (
+            <p role="alert" className="mb-3 rounded-xl bg-[#fbe9e7] px-4 py-3 text-sm text-[#8f2925]">
+              {addError}
+            </p>
+          )}
           <ManualCoffeeForm
             onSubmit={handleManualSubmit}
             onCancel={() => setShowManualForm(false)}
@@ -96,7 +127,7 @@ export function ScanView({ onSelectCoffee }: ScanViewProps) {
         <section aria-labelledby="recent-heading" className="space-y-3">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8b5339]">Pick up where you left off</p>
-            <h3 id="recent-heading" className="mt-1 text-xl font-semibold text-[#1c1410]">Recently tasted</h3>
+            <h3 id="recent-heading" className="mt-1 text-xl font-semibold text-[#1c1410]">Recently rated</h3>
           </div>
           <ul className="space-y-2">
             {recentRatings.map(({ coffee, rating }) => (
@@ -117,7 +148,7 @@ export function ScanView({ onSelectCoffee }: ScanViewProps) {
       <section aria-labelledby="browse-heading" className="space-y-4">
         <div>
           <h3 id="browse-heading" className="text-xl font-semibold text-[#1c1410]">Browse coffees</h3>
-          <p className="mt-1 text-sm text-[#766257]">A curated starting point for your next cup.</p>
+          <p className="mt-1 text-sm text-[#766257]">A curated starting point for your next coffee.</p>
         </div>
         <div className="relative">
           <span aria-hidden="true" className="pointer-events-none absolute left-4 top-3.5 text-[#766257]">

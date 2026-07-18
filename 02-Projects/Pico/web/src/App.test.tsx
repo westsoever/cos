@@ -1,6 +1,6 @@
 import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import App from './App';
 
 afterEach(cleanup);
@@ -90,5 +90,61 @@ describe('Pico app interactions', () => {
     await user.click(screen.getByRole('button', { name: '← Back' }));
     expect(await screen.findByRole('heading', { level: 1, name: 'Journal' })).toBeInTheDocument();
     expect(window.location.hash).toBe('#/journal');
+  });
+
+  it('falls back safely when a coffee hash contains malformed URI encoding', () => {
+    window.location.hash = '#/coffee/%E0%A4%A?from=journal';
+
+    expect(() => render(<App />)).not.toThrow();
+    expect(screen.getByRole('heading', { level: 1, name: 'Journal' })).toBeInTheDocument();
+  });
+
+  it('keeps the rating draft open and reports an error when storage fails', async () => {
+    const user = userEvent.setup();
+    window.location.hash = '#/discover';
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new DOMException('Storage full', 'QuotaExceededError');
+    });
+
+    render(<App />);
+    await user.click(
+      screen.getByRole('button', {
+        name: /Yirgacheffe Kochere.*Onyx Coffee Lab.*Ethiopia/i,
+      }),
+    );
+
+    const ratingForm = screen.getByRole('heading', { name: 'Rate this coffee' }).closest('section');
+    const form = within(ratingForm as HTMLElement);
+    await user.click(form.getByRole('radio', { name: '4 out of 5 stars' }));
+    await user.type(form.getByRole('textbox', { name: /Tasting note/i }), 'Keep this draft.');
+    await user.click(form.getByRole('button', { name: 'Save to journal' }));
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('Could not save your rating');
+    expect(window.location.hash).toBe('#/coffee/eth-yirg-001?from=discover');
+    expect(form.getByRole('textbox', { name: /Tasting note/i })).toHaveValue('Keep this draft.');
+  });
+
+  it('guards internal and native hash navigation while a rating draft is dirty', async () => {
+    const user = userEvent.setup();
+    window.location.hash = '#/discover';
+    const confirm = vi.spyOn(window, 'confirm').mockReturnValue(false);
+
+    render(<App />);
+    await user.click(
+      screen.getByRole('button', {
+        name: /Yirgacheffe Kochere.*Onyx Coffee Lab.*Ethiopia/i,
+      }),
+    );
+    await user.type(screen.getByRole('textbox', { name: /Tasting note/i }), 'Unsaved');
+
+    await user.click(screen.getByRole('button', { name: 'Journal' }));
+    expect(confirm).toHaveBeenCalledTimes(1);
+    expect(window.location.hash).toBe('#/coffee/eth-yirg-001?from=discover');
+
+    window.location.hash = '#/taste';
+    fireEvent(window, new HashChangeEvent('hashchange'));
+    expect(confirm).toHaveBeenCalledTimes(2);
+    expect(window.location.hash).toBe('#/coffee/eth-yirg-001?from=discover');
+    expect(screen.getByRole('textbox', { name: /Tasting note/i })).toHaveValue('Unsaved');
   });
 });

@@ -11,9 +11,10 @@ import { PicoMark } from './ui/Icons';
 interface CoffeeDetailProps {
   coffeeId: string;
   pendingPhoto?: string;
-  onSave: (rating: Omit<Rating, 'ratedAt'>) => void;
+  onSave: (rating: Omit<Rating, 'ratedAt'>) => boolean;
   onBack: () => void;
   onSelectCoffee: (coffeeId: string) => void;
+  onDirtyChange?: (isDirty: boolean) => void;
 }
 
 export function CoffeeDetail({
@@ -22,6 +23,7 @@ export function CoffeeDetail({
   onSave,
   onBack,
   onSelectCoffee,
+  onDirtyChange,
 }: CoffeeDetailProps) {
   const coffee = getCoffeeById(coffeeId);
   const existingRating = getRatingForCoffee(coffeeId);
@@ -94,7 +96,7 @@ export function CoffeeDetail({
       {existingRating && (
         <section className="rounded-2xl border border-[#e3d6ca] bg-[#fbf7f2] p-5" aria-labelledby="saved-rating-heading">
           <div className="flex items-center justify-between gap-3">
-            <h3 id="saved-rating-heading" className="font-semibold text-[#1c1410]">Your last cup</h3>
+            <h3 id="saved-rating-heading" className="font-semibold text-[#1c1410]">Your saved rating</h3>
             <StarDisplay value={existingRating.stars} size="lg" />
           </div>
           {existingRating.note && (
@@ -122,6 +124,7 @@ export function CoffeeDetail({
           photoDataUrl={pendingPhoto}
           onSave={onSave}
           onCancel={onBack}
+          onDirtyChange={onDirtyChange}
         />
       </section>
 

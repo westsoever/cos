@@ -8,6 +8,7 @@ interface YouViewProps {
   onSelectCoffee: (coffeeId: string) => void;
   refreshKey: number;
   onDiscover?: () => void;
+  onAddCoffee?: () => void;
 }
 
 function TasteBar({ tag, strength }: { tag: FlavorTag; strength: number }) {
@@ -83,9 +84,9 @@ function recommendationReason(item: SimilarCoffee, profile: TasteProfile) {
     return `Matches your taste for ${flavorMatches.join(' and ')}${preferenceMatch}.`;
   }
   if (profile.topRoastLevels.includes(coffee.roastLevel)) {
-    return `A ${coffee.roastLevel} roast aligned with the cups you rate highly.`;
+    return `A ${coffee.roastLevel} roast aligned with the coffees you rate highly.`;
   }
-  return `A new direction selected from your highest-rated cups.`;
+  return `A new direction selected from your highest-rated coffees.`;
 }
 
 function RecommendationCard({
@@ -131,7 +132,7 @@ function RecommendationCard({
   );
 }
 
-export function YouView({ onSelectCoffee, refreshKey, onDiscover }: YouViewProps) {
+export function YouView({ onSelectCoffee, refreshKey, onDiscover, onAddCoffee }: YouViewProps) {
   void refreshKey;
   const { tasteProfile, ratings } = loadUserData();
 
@@ -144,13 +145,13 @@ export function YouView({ onSelectCoffee, refreshKey, onDiscover }: YouViewProps
             <TasteIcon className="h-7 w-7" />
           </div>
           <p className="relative mt-5 text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[#dcad90]">Your taste</p>
-          <h2 className="relative mt-2 font-serif text-3xl font-semibold tracking-tight">Make every cup more you</h2>
+          <h2 className="relative mt-2 font-serif text-3xl font-semibold tracking-tight">Build a taste profile that is yours</h2>
           <p className="relative mx-auto mt-3 max-w-md text-sm leading-6 text-[#d8c6bb]">
             Rate your first coffee to reveal the flavors, origins, and roast styles you naturally reach for.
           </p>
         </div>
         <div className="px-7 py-7 text-center">
-          <p className="text-sm text-[#7d685c]">Your profile gets clearer with every rating.</p>
+          <p className="text-sm text-[#7d685c]">Your profile gets clearer as you rate more coffees.</p>
           {onDiscover && (
             <button
               type="button"
@@ -169,8 +170,15 @@ export function YouView({ onSelectCoffee, refreshKey, onDiscover }: YouViewProps
     .sort((a, b) => b[1] - a[1])
     .slice(0, 6);
 
+  const hasPositiveSignal =
+    topTags.length > 0 ||
+    tasteProfile.topOrigins.length > 0 ||
+    tasteProfile.topProcesses.length > 0 ||
+    tasteProfile.topRoastLevels.length > 0;
   const ratedIds = ratings.map((r) => r.coffeeId);
-  const recommendations = getSimilarCoffees(tasteProfile, ratedIds, 6);
+  const recommendations = hasPositiveSignal
+    ? getSimilarCoffees(tasteProfile, ratedIds, 6)
+    : [];
   const profileMaturity =
     tasteProfile.ratingCount >= 8 ? 'Well defined' : tasteProfile.ratingCount >= 4 ? 'Taking shape' : 'Learning';
   const roastValues = tasteProfile.topRoastLevels.map((roast) => `${ROAST_LEVEL_LABELS[roast]} roast`);
@@ -182,7 +190,7 @@ export function YouView({ onSelectCoffee, refreshKey, onDiscover }: YouViewProps
         <div className="relative flex flex-wrap items-end justify-between gap-6">
           <div>
             <p className="text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[#d9a98b]">Taste intelligence</p>
-            <h2 className="mt-2 font-serif text-3xl font-semibold tracking-tight sm:text-4xl">Your cup, decoded</h2>
+            <h2 className="mt-2 font-serif text-3xl font-semibold tracking-tight sm:text-4xl">Your taste, decoded</h2>
             <p className="mt-2 max-w-lg text-sm leading-6 text-[#d7c5ba]">
               Patterns from the coffees you enjoyed—not a quiz, just your real palate.
             </p>
@@ -194,7 +202,7 @@ export function YouView({ onSelectCoffee, refreshKey, onDiscover }: YouViewProps
             </div>
             <div>
               <dt className="text-[0.62rem] uppercase tracking-[0.14em] text-[#baa398]">Rated</dt>
-              <dd className="mt-1 font-semibold">{tasteProfile.ratingCount} cups</dd>
+              <dd className="mt-1 font-semibold">{tasteProfile.ratingCount} coffees</dd>
             </div>
             <div>
               <dt className="text-[0.62rem] uppercase tracking-[0.14em] text-[#baa398]">Average</dt>
@@ -242,7 +250,7 @@ export function YouView({ onSelectCoffee, refreshKey, onDiscover }: YouViewProps
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
             <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#a16648]">Chosen with context</p>
-            <h3 className="mt-1 font-serif text-2xl font-semibold text-[#34231c]">Your next cups</h3>
+            <h3 className="mt-1 font-serif text-2xl font-semibold text-[#34231c]">Your next coffees</h3>
             <p className="mt-1 text-sm text-[#826d61]">Every recommendation shows the signal behind it.</p>
           </div>
           {onDiscover && (
@@ -269,12 +277,18 @@ export function YouView({ onSelectCoffee, refreshKey, onDiscover }: YouViewProps
           </ul>
         ) : (
           <div className="mt-5 rounded-[1.5rem] border border-dashed border-[#d8c5b7] bg-[#fffaf4] px-6 py-9 text-center">
-            <h4 className="font-serif text-xl font-semibold text-[#38271f]">You have explored the current catalog</h4>
-            <p className="mt-2 text-sm text-[#836e62]">Add another coffee to keep teaching Pico what you love.</p>
-            {onDiscover && (
+            <h4 className="font-serif text-xl font-semibold text-[#38271f]">
+              {hasPositiveSignal ? 'You have explored the current catalog' : 'Pico is still learning what you love'}
+            </h4>
+            <p className="mt-2 text-sm text-[#836e62]">
+              {hasPositiveSignal
+                ? 'Add another coffee to keep teaching Pico what you love.'
+                : 'A coffee you rate 4 stars or higher will start shaping recommendations.'}
+            </p>
+            {(onAddCoffee || onDiscover) && (
               <button
                 type="button"
-                onClick={onDiscover}
+                onClick={onAddCoffee ?? onDiscover}
                 className="mt-5 rounded-full bg-[#6b402d] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#523023] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#784c37] focus-visible:ring-offset-2"
               >
                 Add a coffee
