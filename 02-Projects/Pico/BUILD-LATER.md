@@ -1,6 +1,6 @@
 # Build Later On
 
-Features deferred from the MVP. The MVP covers only: **scan → rate → repertoire → similar**.
+Features deferred from the current local-first product. Pico now covers **discover → rate → journal → taste**, including optional brew-recipe details.
 
 | Feature | Notes |
 |---------|-------|
@@ -16,5 +16,4 @@ Features deferred from the MVP. The MVP covers only: **scan → rate → reperto
 | Native iOS/Android app | Reuse `web/src/types/` + `web/src/lib/` |
 | PWA offline | Service worker, install prompt |
 | Premium tier | Paid features (menu scanner, exact match scores) |
-| Brew method logging | Track V60, espresso, etc. per rating |
 | Food / brew pairings | Recommended method, grind, ratio |

@@ -12,7 +12,10 @@ function topValues<T extends string>(
 }
 
 export function computeTasteProfile(ratings: Rating[]): TasteProfile | null {
-  if (ratings.length === 0) return null;
+  const validRatings = ratings.filter(
+    ({ stars }) => Number.isFinite(stars) && stars >= 1 && stars <= 5,
+  );
+  if (validRatings.length === 0) return null;
 
   const coffees = getAllCoffees();
   const coffeeMap = new Map(coffees.map((c) => [c.id, c]));
@@ -23,8 +26,10 @@ export function computeTasteProfile(ratings: Rating[]): TasteProfile | null {
   const roastCounts = new Map<RoastLevel, number>();
   let totalStars = 0;
 
-  for (const rating of ratings) {
+  for (const rating of validRatings) {
     totalStars += rating.stars;
+    if (rating.stars < 4) continue;
+
     const weight = rating.stars / 5;
 
     for (const tag of rating.flavorTags) {
@@ -49,7 +54,7 @@ export function computeTasteProfile(ratings: Rating[]): TasteProfile | null {
     topOrigins: topValues(originCounts),
     topProcesses: topValues(processCounts),
     topRoastLevels: topValues(roastCounts),
-    avgRating: totalStars / ratings.length,
-    ratingCount: ratings.length,
+    avgRating: totalStars / validRatings.length,
+    ratingCount: validRatings.length,
   };
 }

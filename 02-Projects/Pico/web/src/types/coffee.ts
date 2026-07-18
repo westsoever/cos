@@ -53,12 +53,67 @@ export const COFFEE_PROCESSES = [
   'other',
 ] as const;
 
+export type BrewMethod =
+  | 'pour-over'
+  | 'espresso'
+  | 'aeropress'
+  | 'french-press'
+  | 'drip'
+  | 'moka-pot'
+  | 'cold-brew'
+  | 'other';
+
+export type GrindSize =
+  | 'extra-fine'
+  | 'fine'
+  | 'medium-fine'
+  | 'medium'
+  | 'medium-coarse'
+  | 'coarse';
+
+export interface BrewJournal {
+  method?: BrewMethod;
+  doseGrams?: number;
+  waterGrams?: number;
+  yieldGrams?: number;
+  temperatureCelsius?: number;
+  grind?: GrindSize;
+  brewTimeSeconds?: number;
+}
+
+export const BREW_METHOD_OPTIONS: ReadonlyArray<{
+  value: BrewMethod;
+  label: string;
+}> = [
+  { value: 'pour-over', label: 'Pour over' },
+  { value: 'espresso', label: 'Espresso' },
+  { value: 'aeropress', label: 'AeroPress' },
+  { value: 'french-press', label: 'French press' },
+  { value: 'drip', label: 'Drip machine' },
+  { value: 'moka-pot', label: 'Moka pot' },
+  { value: 'cold-brew', label: 'Cold brew' },
+  { value: 'other', label: 'Other' },
+];
+
+export const GRIND_SIZE_OPTIONS: ReadonlyArray<{
+  value: GrindSize;
+  label: string;
+}> = [
+  { value: 'extra-fine', label: 'Extra fine' },
+  { value: 'fine', label: 'Fine' },
+  { value: 'medium-fine', label: 'Medium-fine' },
+  { value: 'medium', label: 'Medium' },
+  { value: 'medium-coarse', label: 'Medium-coarse' },
+  { value: 'coarse', label: 'Coarse' },
+];
+
 export interface Rating {
   coffeeId: string;
   stars: number;
   flavorTags: FlavorTag[];
   note: string;
   photoDataUrl?: string;
+  brew?: BrewJournal;
   ratedAt: string;
 }
 
