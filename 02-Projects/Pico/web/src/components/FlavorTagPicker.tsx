@@ -16,18 +16,19 @@ export function FlavorTagPicker({ selected, onChange }: FlavorTagPickerProps) {
   };
 
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-2" role="group" aria-label="Flavor tags">
       {FLAVOR_TAGS.map((tag) => {
         const isSelected = selected.includes(tag);
         return (
           <button
             key={tag}
             type="button"
+            aria-pressed={isSelected}
             onClick={() => toggle(tag)}
-            className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
+            className={`min-h-10 rounded-full border px-3.5 py-2 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-[#6b3a2a]/40 ${
               isSelected
-                ? 'bg-[#6b3a2a] text-white'
-                : 'bg-[#ede5dc] text-[#6b3a2a] hover:bg-[#e0d4c8]'
+                ? 'border-[#6b3a2a] bg-[#6b3a2a] text-white'
+                : 'border-[#dfd2c7] bg-[#f8f3ee] text-[#6b3a2a] hover:border-[#b99178] hover:bg-[#f1e8df]'
             }`}
           >
             {FLAVOR_TAG_LABELS[tag]}

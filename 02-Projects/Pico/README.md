@@ -1,6 +1,6 @@
 # Pico — Vivino for Coffee
 
-Pick the right coffee. Scan a bag, rate it, build your taste profile, and discover similar coffees.
+Pick the right coffee. Find or add a bag, rate it, keep a brew journal, build your taste profile, and discover similar coffees.
 
 Self-contained project — everything lives in this folder.
 
@@ -49,12 +49,14 @@ cloudflared tunnel --url http://localhost:3000
 
 Use the `*.trycloudflare.com` URL on your phone.
 
-## MVP loop
+## Core loop
 
-1. **Scan** — Search catalog or snap a label photo, then confirm the coffee
-2. **Rate** — 1–5 stars + flavor tags → updates your taste profile
-3. **Repertoire** — View all coffees you've rated
-4. **Similar** — Get recommendations based on your taste profile
+1. **Discover** — Search the catalog, browse by roast, or add details from a bag
+2. **Rate** — Save stars, flavor tags, and a tasting note
+3. **Journal** — Revisit coffees, photos, notes, and optional brew recipes
+4. **Taste** — See your preference patterns and explainable recommendations
+
+The default flow stays intentionally quick. Enthusiasts can expand **Brew details** while rating to record method, dose, water or yield, temperature, grind, and brew time.
 
 ## Project structure
 

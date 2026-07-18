@@ -71,7 +71,7 @@ export function addCustomCoffee(input: ManualCoffeeInput): Coffee {
     variety: input.variety?.trim() || undefined,
     scaScore: input.scaScore,
     flavorTags: [],
-    description: 'Added from scan.',
+    description: 'Added to your Pico journal.',
     isCustom: true,
   };
 

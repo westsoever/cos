@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { addCustomCoffee, searchCoffees } from '../lib/catalog';
-import type { ManualCoffeeInput } from '../types/coffee';
+import { addCustomCoffee, getCatalogCoffees, getCoffeeById, searchCoffees } from '../lib/catalog';
+import { loadUserData } from '../lib/storage';
+import type { ManualCoffeeInput, RoastLevel } from '../types/coffee';
 import { CameraCapture } from './CameraCapture';
 import { ManualCoffeeForm } from './ManualCoffeeForm';
 import { CoffeeCard } from './SimilarList';
+import { SearchIcon } from './ui/Icons';
 
 interface ScanViewProps {
   onSelectCoffee: (coffeeId: string, photoDataUrl?: string) => void;
@@ -13,7 +15,20 @@ export function ScanView({ onSelectCoffee }: ScanViewProps) {
   const [query, setQuery] = useState('');
   const [photoDataUrl, setPhotoDataUrl] = useState<string | undefined>();
   const [showManualForm, setShowManualForm] = useState(false);
-  const results = searchCoffees(query);
+  const [showAddCoffee, setShowAddCoffee] = useState(false);
+  const [roastFilter, setRoastFilter] = useState<RoastLevel | 'all'>('all');
+  const recentRatings = loadUserData().ratings
+    .slice()
+    .sort((a, b) => Date.parse(b.ratedAt) - Date.parse(a.ratedAt))
+    .slice(0, 2)
+    .flatMap((rating) => {
+      const coffee = getCoffeeById(rating.coffeeId);
+      return coffee ? [{ coffee, rating }] : [];
+    });
+  const searchResults = query.trim() ? searchCoffees(query, 20) : getCatalogCoffees();
+  const results = searchResults
+    .filter((coffee) => roastFilter === 'all' || coffee.roastLevel === roastFilter)
+    .slice(0, query.trim() ? 20 : 8);
 
   const handleManualSubmit = (input: ManualCoffeeInput) => {
     const coffee = addCustomCoffee(input);
@@ -21,94 +36,139 @@ export function ScanView({ onSelectCoffee }: ScanViewProps) {
   };
 
   return (
-    <div className="mx-auto max-w-lg space-y-6">
-      <section>
-        <h2 className="mb-1 text-lg font-semibold text-[#1c1410]">Find your coffee</h2>
-        <p className="mb-4 text-sm text-[#8a7568]">
-          Snap a label photo and add it manually, or search the catalog.
-        </p>
+    <div className="mx-auto max-w-lg space-y-8">
+      <header className="space-y-4">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#a66b4f]">Discover</p>
+          <h2 className="mt-1 text-3xl font-semibold tracking-tight text-[#1c1410]">Find a coffee worth remembering.</h2>
+          <p className="mt-2 text-sm leading-6 text-[#78675d]">
+            Search our curated catalog, or add a bag from its label.
+          </p>
+        </div>
+        <button
+          type="button"
+          aria-expanded={showAddCoffee}
+          aria-controls="add-coffee-panel"
+          onClick={() => setShowAddCoffee((open) => !open)}
+          className="w-full rounded-2xl bg-[#6b3a2a] px-5 py-3.5 text-base font-semibold text-white shadow-sm transition hover:bg-[#582f22] focus:outline-none focus:ring-2 focus:ring-[#6b3a2a] focus:ring-offset-2"
+        >
+          {showAddCoffee ? 'Close add coffee' : '+ Add coffee'}
+        </button>
+      </header>
 
-        <CameraCapture
-          photoDataUrl={photoDataUrl}
-          onCapture={(dataUrl) => {
-            setPhotoDataUrl(dataUrl);
-            if (dataUrl) {
-              setShowManualForm(true);
-            } else {
-              setShowManualForm(false);
-            }
-          }}
-        />
-      </section>
-
-      {(photoDataUrl || showManualForm) && (
-        <section>
-          {photoDataUrl && !showManualForm ? (
-            <div className="rounded-xl bg-[#f5efe8] p-4">
-              <p className="text-sm text-[#6b3a2a]">
-                Photo captured. Add this coffee to your repertoire with the details from the label.
-              </p>
-              <button
-                type="button"
-                onClick={() => setShowManualForm(true)}
-                className="mt-3 w-full rounded-xl bg-[#6b3a2a] py-3 font-medium text-white"
-              >
-                Add manually
-              </button>
-            </div>
-          ) : (
-            <ManualCoffeeForm
-              onSubmit={handleManualSubmit}
-              onCancel={
-                photoDataUrl
-                  ? () => setShowManualForm(false)
-                  : undefined
-              }
-            />
+      {showAddCoffee && (
+        <section id="add-coffee-panel" className="space-y-4 rounded-2xl border border-[#e5d9ce] bg-[#fbf7f2] p-4">
+          <div>
+            <h3 className="font-semibold text-[#1c1410]">Add from the bag</h3>
+            <p className="mt-1 text-sm leading-5 text-[#78675d]">
+              A label photo is saved with your rating; Pico does not read or identify the coffee from the image yet.
+            </p>
+          </div>
+          <CameraCapture
+            photoDataUrl={photoDataUrl}
+            onCapture={(dataUrl) => {
+              setPhotoDataUrl(dataUrl);
+              if (dataUrl) setShowManualForm(true);
+            }}
+          />
+          {!showManualForm && (
+            <button
+              type="button"
+              onClick={() => setShowManualForm(true)}
+              className="w-full rounded-xl border border-[#cdbbae] bg-white py-3 font-medium text-[#6b3a2a] transition hover:border-[#a66b4f] focus:outline-none focus:ring-2 focus:ring-[#6b3a2a]/30"
+            >
+              Enter label details
+            </button>
           )}
         </section>
       )}
 
-      {!photoDataUrl && !showManualForm && (
-        <section className="rounded-xl border border-[#e8dfd6] bg-white p-4">
-          <p className="text-sm text-[#8a7568]">
-            No photo yet? You can still add a coffee manually.
-          </p>
-          <button
-            type="button"
-            onClick={() => setShowManualForm(true)}
-            className="mt-3 w-full rounded-xl border border-[#e8dfd6] py-3 font-medium text-[#6b3a2a]"
-          >
-            Add manually without photo
-          </button>
+      {showAddCoffee && showManualForm && (
+        <section>
+          <ManualCoffeeForm
+            onSubmit={handleManualSubmit}
+            onCancel={() => setShowManualForm(false)}
+          />
         </section>
       )}
 
-      <section>
-        <div className="mb-3 flex items-end justify-between gap-3">
+      {recentRatings.length > 0 && (
+        <section aria-labelledby="recent-heading" className="space-y-3">
           <div>
-            <label htmlFor="coffee-search" className="block text-sm font-medium text-[#6b3a2a]">
-              Or search catalog
-            </label>
-            <p className="mt-1 text-xs text-[#8a7568]">Pick a pre-loaded coffee instead.</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#a66b4f]">Pick up where you left off</p>
+            <h3 id="recent-heading" className="mt-1 text-xl font-semibold text-[#1c1410]">Recently tasted</h3>
           </div>
-        </div>
-        <input
-          id="coffee-search"
-          type="search"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="e.g. Yirgacheffe, Onyx, Ethiopia…"
-          className="w-full rounded-xl border border-[#e8dfd6] bg-white px-4 py-3 text-[#1c1410] placeholder:text-[#b5a394] focus:border-[#6b3a2a] focus:outline-none focus:ring-2 focus:ring-[#6b3a2a]/20"
-          autoComplete="off"
-        />
-      </section>
+          <ul className="space-y-2">
+            {recentRatings.map(({ coffee, rating }) => (
+              <li key={coffee.id}>
+                <CoffeeCard
+                  name={coffee.name}
+                  roaster={coffee.roaster}
+                  origin={coffee.origin}
+                  stars={rating.stars}
+                  onClick={() => onSelectCoffee(coffee.id)}
+                />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
-      {query.trim() && (
-        <section>
-          <h3 className="mb-3 text-sm font-medium text-[#8a7568]">
-            {results.length > 0 ? `${results.length} result${results.length > 1 ? 's' : ''}` : 'No matches'}
-          </h3>
+      <section aria-labelledby="browse-heading" className="space-y-4">
+        <div>
+          <h3 id="browse-heading" className="text-xl font-semibold text-[#1c1410]">Browse coffees</h3>
+          <p className="mt-1 text-sm text-[#8a7568]">A curated starting point for your next cup.</p>
+        </div>
+        <div className="relative">
+          <span aria-hidden="true" className="pointer-events-none absolute left-4 top-3.5 text-[#8a7568]">
+            <SearchIcon className="h-5 w-5" />
+          </span>
+          <label htmlFor="coffee-search" className="sr-only">Search coffee catalog</label>
+          <input
+            id="coffee-search"
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search coffee, roaster, origin…"
+            className="w-full rounded-2xl border border-[#ded2c7] bg-white py-3 pl-10 pr-4 text-[#1c1410] shadow-sm placeholder:text-[#a79588] focus:border-[#6b3a2a] focus:outline-none focus:ring-2 focus:ring-[#6b3a2a]/20"
+            autoComplete="off"
+          />
+        </div>
+        <div className="flex gap-2 overflow-x-auto pb-1" aria-label="Filter by roast">
+          {(['all', 'light', 'medium', 'dark'] as const).map((roast) => (
+            <button
+              key={roast}
+              type="button"
+              aria-pressed={roastFilter === roast}
+              onClick={() => setRoastFilter(roast)}
+              className={`shrink-0 rounded-full border px-3.5 py-1.5 text-sm font-medium capitalize transition focus:outline-none focus:ring-2 focus:ring-[#6b3a2a]/30 ${
+                roastFilter === roast
+                  ? 'border-[#6b3a2a] bg-[#6b3a2a] text-white'
+                  : 'border-[#ded2c7] bg-white text-[#6b3a2a] hover:border-[#a66b4f]'
+              }`}
+            >
+              {roast === 'all' ? 'All roasts' : roast}
+            </button>
+          ))}
+        </div>
+        <div className="flex items-center justify-between">
+          <p className="text-sm font-medium text-[#78675d]" aria-live="polite">
+            {query.trim() ? `${results.length} match${results.length === 1 ? '' : 'es'}` : 'Featured catalog'}
+          </p>
+          {(query || roastFilter !== 'all') && (
+            <button
+              type="button"
+              onClick={() => {
+                setQuery('');
+                setRoastFilter('all');
+              }}
+              className="text-sm font-medium text-[#6b3a2a] underline decoration-[#c4956a] underline-offset-4"
+            >
+              Clear
+            </button>
+          )}
+        </div>
+        {results.length > 0 ? (
           <ul className="space-y-2">
             {results.map((coffee) => (
               <li key={coffee.id}>
@@ -116,13 +176,25 @@ export function ScanView({ onSelectCoffee }: ScanViewProps) {
                   name={coffee.name}
                   roaster={coffee.roaster}
                   origin={coffee.origin}
-                  onClick={() => onSelectCoffee(coffee.id, photoDataUrl)}
+                  onClick={() => onSelectCoffee(coffee.id)}
                 />
               </li>
             ))}
           </ul>
-        </section>
-      )}
+        ) : (
+          <div className="rounded-2xl border border-dashed border-[#d8c9bd] px-5 py-8 text-center">
+            <p className="font-medium text-[#1c1410]">No coffees found</p>
+            <p className="mt-1 text-sm text-[#8a7568]">Try another search or add this coffee yourself.</p>
+            <button
+              type="button"
+              onClick={() => setShowAddCoffee(true)}
+              className="mt-3 font-medium text-[#6b3a2a] underline underline-offset-4"
+            >
+              Add coffee
+            </button>
+          </div>
+        )}
+      </section>
     </div>
   );
 }

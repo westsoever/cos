@@ -22,19 +22,22 @@ export function ManualCoffeeForm({ onSubmit, onCancel }: ManualCoffeeFormProps) 
 
   const resolvedProcess = process === 'other' ? customProcess.trim() : process;
   const parsedScaScore = scaScore.trim() ? Number(scaScore) : undefined;
+  const scaScoreInvalid =
+    parsedScaScore !== undefined &&
+    (!Number.isFinite(parsedScaScore) || parsedScaScore < 0 || parsedScaScore > 100);
   const canSubmit =
     name.trim().length > 0 &&
     roaster.trim().length > 0 &&
     resolvedProcess.length > 0 &&
-    (parsedScaScore === undefined || (parsedScaScore >= 0 && parsedScaScore <= 100));
+    !scaScoreInvalid;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!canSubmit) return;
 
     onSubmit({
-      name,
-      roaster,
+      name: name.trim(),
+      roaster: roaster.trim(),
       origin: origin.trim() || undefined,
       process: resolvedProcess,
       roastLevel,
@@ -44,11 +47,11 @@ export function ManualCoffeeForm({ onSubmit, onCancel }: ManualCoffeeFormProps) 
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 rounded-xl border border-[#e8dfd6] bg-white p-4">
+    <form onSubmit={handleSubmit} className="space-y-5 rounded-2xl border border-[#e2d6cc] bg-white p-5 shadow-sm">
       <div>
-        <h3 className="font-semibold text-[#1c1410]">Add to repertoire</h3>
-        <p className="mt-1 text-sm text-[#8a7568]">
-          Enter the details from your label, then rate it to save.
+        <h3 className="text-lg font-semibold text-[#1c1410]">Coffee details</h3>
+        <p className="mt-1 text-sm leading-5 text-[#78675d]">
+          Copy what you can from the label. Only name, roaster, roast, and process are required.
         </p>
       </div>
 
@@ -64,6 +67,7 @@ export function ManualCoffeeForm({ onSubmit, onCancel }: ManualCoffeeFormProps) 
           placeholder="e.g. Yirgacheffe Kochere"
           className={inputClassName}
           required
+          autoFocus
         />
       </div>
 
@@ -180,10 +184,11 @@ export function ManualCoffeeForm({ onSubmit, onCancel }: ManualCoffeeFormProps) 
             onChange={(e) => setScaScore(e.target.value)}
             placeholder="e.g. 86.5"
             className={inputClassName}
+            aria-invalid={scaScoreInvalid}
             aria-describedby="sca-score-help"
           />
-          <p id="sca-score-help" className="mt-1 text-xs text-[#8a7568]">
-            Specialty Coffee Association (0–100)
+          <p id="sca-score-help" className={`mt-1 text-xs ${scaScoreInvalid ? 'text-[#9b2c2c]' : 'text-[#8a7568]'}`}>
+            {scaScoreInvalid ? 'Enter a score from 0 to 100.' : 'Specialty Coffee Association (0–100)'}
           </p>
         </div>
       </div>
@@ -193,7 +198,7 @@ export function ManualCoffeeForm({ onSubmit, onCancel }: ManualCoffeeFormProps) 
           <button
             type="button"
             onClick={onCancel}
-            className="flex-1 rounded-xl border border-[#e8dfd6] bg-white py-3 font-medium text-[#6b3a2a]"
+            className="flex-1 rounded-xl border border-[#d6c7bb] bg-white py-3 font-medium text-[#6b3a2a] focus:outline-none focus:ring-2 focus:ring-[#6b3a2a]/30"
           >
             Cancel
           </button>
@@ -201,7 +206,7 @@ export function ManualCoffeeForm({ onSubmit, onCancel }: ManualCoffeeFormProps) 
         <button
           type="submit"
           disabled={!canSubmit}
-          className="flex-1 rounded-xl bg-[#6b3a2a] py-3 font-medium text-white disabled:opacity-40"
+          className="flex-1 rounded-xl bg-[#6b3a2a] py-3 font-medium text-white focus:outline-none focus:ring-2 focus:ring-[#6b3a2a] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40"
         >
           Continue to rating
         </button>

@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 interface CameraCaptureProps {
   photoDataUrl?: string;
@@ -7,43 +7,71 @@ interface CameraCaptureProps {
 
 export function CameraCapture({ photoDataUrl, onCapture }: CameraCaptureProps) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle');
+  const statusId = 'label-photo-status';
 
   const handleFile = (file: File) => {
+    if (!file.type.startsWith('image/')) {
+      setStatus('error');
+      return;
+    }
+    setStatus('loading');
     const reader = new FileReader();
-    reader.onload = () => onCapture(reader.result as string);
+    reader.onload = () => {
+      onCapture(reader.result as string);
+      setStatus('idle');
+    };
+    reader.onerror = () => setStatus('error');
     reader.readAsDataURL(file);
   };
 
   return (
     <div className="space-y-3">
       {photoDataUrl ? (
-        <div className="relative overflow-hidden rounded-xl border border-[#e8dfd6]">
-          <img src={photoDataUrl} alt="Label capture" className="h-40 w-full object-cover" />
+        <figure className="relative overflow-hidden rounded-2xl border border-[#dfd2c7] bg-white">
+          <img src={photoDataUrl} alt="Selected coffee bag label" className="h-44 w-full object-cover" />
+          <figcaption className="px-3 py-2 text-xs text-[#78675d]">Photo ready to save with your rating</figcaption>
           <button
             type="button"
-            onClick={() => onCapture(undefined)}
-            className="absolute right-2 top-2 rounded-full bg-black/50 px-2 py-1 text-xs text-white"
+            onClick={() => {
+              onCapture(undefined);
+              setStatus('idle');
+            }}
+            className="absolute right-2 top-2 rounded-full bg-[#1c1410]/80 px-3 py-1.5 text-xs font-medium text-white focus:outline-none focus:ring-2 focus:ring-white"
           >
-            Remove
+            Remove photo
           </button>
-        </div>
+        </figure>
       ) : (
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
-          className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-[#c4956a] bg-[#f5efe8] py-8 text-[#6b3a2a] transition-colors hover:bg-[#ede5dc]"
+          disabled={status === 'loading'}
+          aria-describedby={statusId}
+          className="flex w-full items-center justify-center gap-3 rounded-2xl border border-dashed border-[#bd9d87] bg-white px-4 py-6 text-[#6b3a2a] transition hover:border-[#6b3a2a] hover:bg-[#fffaf5] focus:outline-none focus:ring-2 focus:ring-[#6b3a2a]/30 disabled:opacity-60"
         >
-          <span className="text-2xl">📷</span>
-          <span className="font-medium">Snap label photo</span>
+          <span aria-hidden="true" className="text-xl">▣</span>
+          <span className="text-left">
+            <span className="block font-semibold">{status === 'loading' ? 'Preparing photo…' : 'Add label photo'}</span>
+            <span className="block text-xs font-normal text-[#8a7568]">Take a photo or choose one</span>
+          </span>
         </button>
       )}
 
+      <p
+        id={statusId}
+        role={status === 'error' ? 'alert' : 'status'}
+        className={`text-xs ${status === 'error' ? 'text-[#9b2c2c]' : 'sr-only'}`}
+      >
+        {status === 'error' ? 'That photo could not be opened. Please choose another image.' : status === 'loading' ? 'Preparing photo.' : ''}
+      </p>
       <input
         ref={inputRef}
         type="file"
         accept="image/*"
         capture="environment"
         className="hidden"
+        aria-label="Choose a coffee label photo"
         onChange={(e) => {
           const file = e.target.files?.[0];
           if (file) handleFile(file);
