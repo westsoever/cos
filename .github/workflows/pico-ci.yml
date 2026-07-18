@@ -4,13 +4,11 @@ on:
   pull_request:
     paths:
       - '02-Projects/pico/**'
-      - '.gitmodules'
       - '.github/workflows/pico-ci.yml'
   push:
     branches: [main]
     paths:
       - '02-Projects/pico/**'
-      - '.gitmodules'
       - '.github/workflows/pico-ci.yml'
   workflow_dispatch:
 
@@ -30,9 +28,6 @@ jobs:
         working-directory: 02-Projects/pico/web
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/setup-node@v4
         with:
@@ -60,9 +55,6 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/setup-node@v4
         with:
