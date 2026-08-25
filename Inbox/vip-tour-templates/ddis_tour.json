@@ -1,0 +1,91 @@
+{
+  "title": "DDIS Tour",
+  "subtitle": "TechBBQ 2026 - Day 1 (Wednesday, 26 August) - Bella Center Copenhagen",
+  "author": "Lennert Jessen",
+  "footer": "DDIS Tour Brief - TechBBQ 2026 Day 1",
+
+  "quick_reference": {
+    "headers": ["Stop", "Location", "Time", "What to show / say"],
+    "col_widths": [30, 24, 12, 116],
+    "rows": [
+      ["Badge pickup", "VIP Entrance", "3 min",
+       "Collect badges (first name + \"forsvaret\"). Frame the day: 10k+ attendees, 2k investors, 4k startups, dedicated Defence & Dual-Use Summit."],
+      ["Defence Tech & Cyber exhibition", "Hall C area", "15 min",
+       "Day 1 is exhibition floor only. Walk the booths - drones, AI, cyber, dual-use startups. Point out ecosystem builders: Defence Tech Denmark, Defense Innovation Highway, DIREC, Cyber Angel Academy. Mention the programme is Day 2 (09:30)."],
+      ["Startup Showcase", "Halls C3-C4", "5 min",
+       "Branded 2x3m booths, early-stage startups. Talking point: dual-use potential not being surfaced to defence sector - a pipeline DDIS could tap. Mention Brella app."],
+      ["Main artery / stages", "Central walkway", "3 min",
+       "Walk past BBQ Stage & Founders Lounge for scale. Point to AWS x Nvidia: Agentic AI and The Policy Stage as tracks to explore."],
+      ["Defence & Dual-Use Summit sessions", "Various stages", "2 min",
+       "Curated sessions happening today on raising capital and B2B sales for defencetech. Mention they can catch these throughout the day."],
+      ["Close & handoff", "-", "2 min",
+       "Three next steps: explore exhibition floor fully, use Brella app for 1:1s, connect with Nadika & Jean-Jacques. Plant the seed: joint DDIS side event at TechBBQ 2027."]
+    ]
+  },
+
+  "itinerary": [
+    {
+      "time": "0:00 - 0:03",
+      "title": "VIP Entrance & Badge Pickup",
+      "body": "Collect badges (first name + \"forsvaret\"). Quick intro: frame the day - TechBBQ is 10,000+ attendees, ~2,000 investors, ~4,000 startups, and this year has a dedicated Defence & Dual-Use Summit for the second time, in partnership with Industriens Fond. Set expectations: defence/cyber track first, then the broader innovation floor."
+    },
+    {
+      "time": "0:03 - 0:18",
+      "title": "Defence Tech & Cyber Arena - Exhibition Floor (Hall C area)",
+      "body": "The core of the tour. <b>Day 1 is exhibition floor only</b> - the event room programme with keynotes and roundtables is on Day 2 (Aug 27) at 09:30. Walk the booths and highlight:<br/><b>Dual-use startups</b> - companies building drone, AI, and cyber tech with both civilian and defence applications. This is DDIS's bread and butter.<br/><b>Ecosystem builders behind the arena:</b> Defence Tech Denmark, Defense Innovation Highway, DIREC's Next Generation Cybersecurity, and Cyber Angel Academy. These connect research, startups, and the defence sector - exactly the \"samarbejde\" side of DDIS's mandate.<br/><b>Bifrost Defence</b> is attending (David Rogberg, Nicholas MacGowan) - if exhibiting nearby, worth a quick intro.<br/><b>Talking point:</b> The Defence & Dual-Use Summit focuses on the two biggest obstacles for defencetech startups: raising capital and B2B sales. Direct sales to defence forces are hard; B2B sales are under-explored. That's the gap DDIS's office could help close."
+    },
+    {
+      "time": "0:18 - 0:23",
+      "title": "Startup Showcase (Halls C3-C4 area)",
+      "body": "Branded 2x3m booths for early-stage startups in front of 10,000+ attendees - \"at the heart of TechBBQ.\" Walk through quickly to give them the scale and breadth of the Danish/Nordic startup ecosystem beyond just defence.<br/><b>Talking point:</b> Many of these startups have dual-use potential that isn't being surfaced to the defence sector - that's a pipeline DDIS could tap. Mention the Brella app (AI matchmaking) as a tool they could use to find relevant founders."
+    },
+    {
+      "time": "0:23 - 0:26",
+      "title": "Main Artery & BBQ Stage Flythrough",
+      "body": "Walk the main artery past the BBQ Stage and Founders Lounge to give them the physical scale. Quick mention of other relevant tracks they could explore on their own:<br/>- AWS x Nvidia: Agentic AI (AI agents are directly relevant to DDIS's tech-scouting mandate)<br/>- The Policy Stage (governance and regulation, relevant to defence tech procurement)"
+    },
+    {
+      "time": "0:26 - 0:28",
+      "title": "Defence & Dual-Use Summit Sessions",
+      "body": "Point out that curated sessions on raising capital and B2B sales for defencetech are happening today across various stages. If any are live during the tour, worth popping in. The full Defence Tech & Cyber Arena programme (keynotes, panels, roundtables) is tomorrow (Aug 27) at 09:30 in the event room."
+    },
+    {
+      "time": "0:28 - 0:30",
+      "title": "Close & Next Steps",
+      "body": "Hand off with three concrete next steps:<br/>1. <b>Explore the Defence Tech & Cyber exhibition floor fully</b> - Day 1 is exhibition-only, so they can take their time with the booths.<br/>2. <b>Use the Brella app</b> to search for defence/cyber/AI founders and schedule 1:1s.<br/>3. <b>Key contacts:</b> Nadika Bulathsinhala (Industriens Fond, already CC'd) and Jean-Jacques (jdj@techbbq.org, Head of Partnerships) for any follow-up. Thomas Ebdrup floated a joint side event with DDIS next year - worth planting that seed."
+    }
+  ],
+
+  "context": {
+    "col_widths": [22, 160],
+    "rows": [
+      ["The group", "Simon, Anne Sofie, Bjarke Hesbjerg, Jakob - 4 visitors from DDIS (Forsvarets Efterretningstjeneste / Danish Defence Intelligence Service), Office for Technology Development & Cooperation (Kontor for Teknologiudnyttelse og Samarbejde)."],
+      ["Why you", "Thomas Ebdrup asked you personally to show them around. They are the \"cyber people from the Danish CIA.\""],
+      ["Entry", "VIP entrance. Badges labelled with first name + \"forsvaret\"."],
+      ["Bridge", "Nadika Bulathsinhala (Industriens Fond) is CC'd on their visit. Relationship started at the Industriens Fonds Challenge."]
+    ]
+  },
+
+  "run_down": [
+    "These aren't generic VIPs. They're intelligence-service tech scouts who evaluate emerging capabilities and coordinate partnerships. Their office exists to bridge defence needs with external technology development. The tour should be less \"look at the shiny startups\" and more \"here's the pipeline, here's who's building what, and here's where the connective tissue is.\"",
+    "<b>Defence Tech & Cyber Arena</b> is the centrepiece - a dedicated area where startups meet the defence sector, civil innovation meets new applications, and investors meet the companies shaping the future of defence. Organised by TechBBQ & Industriens Fond, with Defence Tech Denmark, Defense Innovation Highway, DIREC's Next Generation Cybersecurity, and Cyber Angel Academy behind it. Day 1 (26 Aug): exhibition floor with startups and SMEs. Day 2 (27 Aug): exhibition floor + programme in the event room (09:30-10:30+) with keynotes, panels, fireside interview, and roundtables.",
+    "<b>Defence & Dual-Use Summit</b> (two-day track) focuses on the two biggest obstacles for defencetech startups: raising capital and B2B sales. Direct sales to defence forces are difficult; B2B sales are both attractive and under-explored. Partners: Odin Defence and Tyr VC.",
+    "<b>Other relevant tracks:</b> AWS x Nvidia: Agentic AI (AI agents directly relevant to DDIS's tech-scouting mandate), The Policy Stage (governance and regulation, relevant to defence tech procurement). The Brella app (AI matchmaking) lets them search for defence/cyber/AI founders and schedule 1:1s."
+  ],
+
+  "contacts": {
+    "headers": ["Name", "Role / Org", "Contact"],
+    "col_widths": [44, 88, 50],
+    "rows": [
+      ["Bjarke Hesbjerg", "DDIS - Kontor for Teknologiudvikling og Samarbejde", "fe-4579@fe-ddis.dk"],
+      ["Nadika Bulathsinhala", "Industriens Fond (funder & DefenceTech partner)", "nb@industriensfond.dk"],
+      ["Thomas Ebdrup", "TechBBQ - Chief Project & Strategy Officer", "-"],
+      ["Jean-Jacques", "TechBBQ - Head of Partnerships", "jdj@techbbq.org"],
+      ["Marie-Louise Nielsen", "TechBBQ - Startup Program & Event Manager", "man@techbbq.org"],
+      ["David Rogberg / Nicholas MacGowan", "Bifrost Defence (attending, general pass)", "@bifrostdefence.com"]
+    ]
+  },
+
+  "closing_note": "<b>One thing to flag:</b> Thomas's original email to Bjarke mentioned a joint side event with DDIS next year. If the tour goes well, that's the natural conversation-ender: \"Thomas asked me to mention he'd love to explore doing something together with DDIS at TechBBQ 2027.\" That plants the seed without overcommitting.",
+  "closing_tagline": "They came to find partners, not just to look around. Give them the map and the contacts and they'll do the rest."
+}
