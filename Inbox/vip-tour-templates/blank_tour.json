@@ -1,0 +1,76 @@
+{
+  "title": "VIP Tour",
+  "subtitle": "TechBBQ 2026 - Day X (DATE) - Bella Center Copenhagen",
+  "author": "Lennert Jessen",
+  "footer": "VIP Tour Brief - TechBBQ 2026",
+
+  "quick_reference": {
+    "headers": ["Stop", "Location", "Time", "What to show / say"],
+    "col_widths": [30, 24, 12, 116],
+    "rows": [
+      ["Stop 1", "Location", "X min", "Brief description of what to show and say here."],
+      ["Stop 2", "Location", "X min", "Brief description."],
+      ["Stop 3", "Location", "X min", "Brief description."],
+      ["Stop 4", "Location", "X min", "Brief description."],
+      ["Stop 5", "Location", "X min", "Brief description."],
+      ["Close & handoff", "-", "X min", "Next steps and key contacts to hand off."]
+    ]
+  },
+
+  "itinerary": [
+    {
+      "time": "0:00 - 0:XX",
+      "title": "Stop 1 Title",
+      "body": "Detailed talking points for this stop. Use <b>bold</b> for emphasis and <br/> for line breaks."
+    },
+    {
+      "time": "0:XX - 0:XX",
+      "title": "Stop 2 Title",
+      "body": "Detailed talking points here."
+    },
+    {
+      "time": "0:XX - 0:XX",
+      "title": "Stop 3 Title",
+      "body": "Detailed talking points here."
+    },
+    {
+      "time": "0:XX - 0:XX",
+      "title": "Stop 4 Title",
+      "body": "Detailed talking points here."
+    },
+    {
+      "time": "0:XX - 0:XX",
+      "title": "Close & Next Steps",
+      "body": "Hand off with concrete next steps."
+    }
+  ],
+
+  "context": {
+    "col_widths": [22, 160],
+    "rows": [
+      ["The group", "Who are they? Name, role, organization."],
+      ["Why you", "Why are you giving this tour? Who asked you?"],
+      ["Entry", "How do they get in? VIP entrance, badge details."],
+      ["Bridge", "Any existing relationship or connection point."]
+    ]
+  },
+
+  "run_down": [
+    "Short paragraph on who these VIPs are and what they care about.",
+    "Short paragraph on the main area/track relevant to them.",
+    "Short paragraph on other relevant tracks or features at TechBBQ."
+  ],
+
+  "contacts": {
+    "headers": ["Name", "Role / Org", "Contact"],
+    "col_widths": [44, 88, 50],
+    "rows": [
+      ["Name 1", "Role / Organization", "email@example.com"],
+      ["Name 2", "Role / Organization", "email@example.com"],
+      ["Name 3", "Role / Organization", "-"]
+    ]
+  },
+
+  "closing_note": "Any final flag or conversation-ender to plant during the handoff.",
+  "closing_tagline": "A short motivational note for yourself."
+}
